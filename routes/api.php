@@ -25,6 +25,13 @@ Route::post('/login', [AuthController::class, 'login']);
 
 //pour protéger les routes..
 //if loged in:
+Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
+
+    Route::get('/checkingAuthenticated', function () {
+        return response()->json(['message' => 'You are in', 'status' => 200], 200);
+    });
+});
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });

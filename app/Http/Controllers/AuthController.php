@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $fields = $request->validate([
+        $validator = Validator::make($request->all(), [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
             'cinpasseport' => ['required', 'string', 'min:7', 'max:8', 'unique:users'],
@@ -22,60 +23,89 @@ class AuthController extends Controller
 
         ]);
 
-        $role = DB::collection('roles')->where('nom', 'Stagiaire')->first();
-        $user = User::create([
-            'nom' => $fields['nom'],
-            'prenom' => $fields['prenom'],
-            'cinpasseport' => $fields['cinpasseport'],
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password']),
-            'role_id' => $role['_id']
-        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'validation_errors' => $validator->messages(),
+            ]);
+        } else {
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
+            $role = DB::collection('roles')->where('nom', 'Stagiaire')->first();
+            $user = User::create([
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'cinpasseport' => $request->cinpasseport,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'role_id' => $role['_id']
+            ]);
 
-        return response($response, 201);
+
+
+            $token = $user->createToken($user->email . '_Token')->plainTextToken;
+
+
+            return response()->json([
+                'status' => 200,
+                'username' => $user->nom,
+                'token' => $token,
+                'message' => 'Inscrit!'
+            ]);
+        }
     }
 
 
 
     public function login(Request $request)
     {
-        $fields = $request->validate([
+        $validator = Validator::make($request->all(), [
             'cinpasseport' => ['required', 'string', 'min:7', 'max:8'],
             'password' => ['required', 'string', 'min:8']
 
         ]);
 
-        // Check cinpasseport
-        $user = User::where('cinpasseport', $fields['cinpasseport'])->first();
-        // Check password
-        if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return  response([
-                'message' => 'Bad creds'
-            ], 401);
+        if ($validator->fails()) {
+
+            return response()->json([
+                'validation_errors' => $validator->messages(),
+            ]);
+        } else {
+
+            // Check cinpasseport
+            $user = User::where('cinpasseport', $request->cinpasseport)->first();
+            // Check password
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'information incorrectes',
+                ]);
+            } else {
+
+                $role = DB::collection('roles')->where('nom', 'Coordinateur')->first();
+
+                if ($user->role_id == $role['_id']) {
+                    $token = $user->createToken($user->email . '_CoordinateurToken', ['server:coordinateur'])->plainTextToken;
+                } else {
+                    $token = $user->createToken($user->email . '_Token', [''])->plainTextToken;
+                }
+
+                return response()->json([
+                    'status' => 200,
+                    'username' => $user->nom,
+                    'token' => $token,
+                    'message' => 'logged in successfully!',
+                ]);
+            }
         }
-
-        $token = $user->createToken('myapptoken')->plainTextToken;
-        $response = [
-            'user' => $user,
-            'token' => $token
-        ];
-
-        return response($response, 201);
     }
 
 
-    public function logout(Request $request)
+    public function logout()
     {
         auth()->user()->tokens()->delete();
 
-        return [
-            'message' => 'Logged out'
-        ];
+        return response()->json([
+            'status' => 200,
+            'message' => 'Logged out successfully'
+        ]);
     }
 }
