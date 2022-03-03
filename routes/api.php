@@ -24,36 +24,37 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 //pour protéger les routes..
-//if loged in:
+//if loged in and isCoordinateur:
 Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
 
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
+
+    //CRUD coordinateur
+    //Get all users except stagiaire
+    Route::get('/users', [UserController::class, 'index']);
+    //get one specific user by id
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    //Update user by id
+    Route::post('/users/{id}', [UserController::class, 'update']);
+    // Deactivate/Activate user by id
+    Route::get('/users-status/{id}', [UserController::class, 'toggleStatus']);
+    //search user by keyword
+    // Route::get('/users/search/{name}', [UserController::class, 'search']);
+
+    Route::get('/edit-user/{id}', [UserController::class, 'edit']);
+
+    //Create a user
+    Route::post('/users', [UserController::class, 'store']);
+    //get roles only for testing
+    Route::get('/roles', [UserController::class, 'GetRoles']);
 });
 
+
+
+
+//for all users
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
-
-//CRUD coordinateur
-
-//Get all users except stagiaire
-
-Route::get('/users', [UserController::class, 'index']);
-
-//get one specific user by id
-Route::get('/users/{id}', [UserController::class, 'show']);
-
-//Update user by id
-Route::put('/users/{id}', [UserController::class, 'update']);
-
-// Deactivate/Activate user by id
-Route::get('/users/{id}', [UserController::class, 'toggleStatus']);
-
-//search user by keyword
-Route::get('/users/search/{name}', [UserController::class, 'search']);
-
-
-//Create a user
-Route::post('/users', [UserController::class, 'store']);

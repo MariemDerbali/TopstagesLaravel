@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('tel');
             $table->string('image');
             $table->unique('cinpasseport');
-            $table->string('etat');
+            $table->string('etat')->default(1);
             $table->unique('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
