@@ -40,7 +40,7 @@ class AuthController extends Controller
                 'cinpasseport' => $request->cinpasseport,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'role_id' => $role['_id']
+                'role_id' => $role['nom']
             ]);
 
 
@@ -96,7 +96,7 @@ class AuthController extends Controller
                 //cheching if the logged in user has role= coordinateur if yes then creating a token for coordinateur and a role variable
                 $role = DB::collection('roles')->where('nom', 'Coordinateur')->first();
 
-                if ($user->role_id == $role['_id']) {
+                if ($user->role_id == $role['nom']) {
                     $roleCordi = $role['nom'];
                     $token = $user->createToken($user->email . '_CoordinateurToken', ['server:coordinateur'])->plainTextToken;
                 } else {

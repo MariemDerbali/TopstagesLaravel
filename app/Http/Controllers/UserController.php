@@ -22,7 +22,7 @@ class UserController extends Controller
     {
 
         $roleStagiaire = DB::collection('roles')->where('nom', 'Stagiaire')->first();
-        $roleStagiaireId = $roleStagiaire['_id'];
+        $roleStagiaireId = $roleStagiaire['nom'];
         $allusersexcpetstagiaire = User::where('role_id', '!=', $roleStagiaireId)->get();
 
 
@@ -78,7 +78,7 @@ class UserController extends Controller
             $user = new User;
             $roleSelected = DB::collection('roles')->where('nom', $request->input('role_id'))->first();
 
-            $user->role_id = $roleSelected['_id'];
+            $user->role_id = $roleSelected['nom'];
             $user->matricule = $request->input('matricule');
             $user->adresse = $request->input('adresse');
             $user->nom = $request->input('nom');
@@ -87,7 +87,7 @@ class UserController extends Controller
             $user->cinpasseport = $request->input('cinpasseport');
             $user->email = $request->input('email');
             $user->password = bcrypt($request->input('password'));
-            $user->etat = 1;
+            $user->etat = 'active';
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
@@ -166,7 +166,7 @@ class UserController extends Controller
             $user = User::find($id);
             if ($user) {
                 $roleSelected = DB::collection('roles')->where('nom', $request->input('role_id'))->first();
-                $user->role_id = $roleSelected['_id'];
+                $user->role_id = $roleSelected['nom'];
                 $user->matricule = $request->input('matricule');
                 $user->adresse = $request->input('adresse');
                 $user->nom = $request->input('nom');
@@ -189,6 +189,7 @@ class UserController extends Controller
                     $user->image = 'img/user/' . $filename;
                 }
 
+                $user->etat = $request->input('etat');
                 $user->update();
 
                 return response()->json([
@@ -213,40 +214,6 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-
-
-    /**
-     * Deactivate or Activate user
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function toggleStatus($id)
-    {
-        $user  = User::find($id);
-        $user->etat = !$user->etat;
-        $user->save();
-
-        return response()->json([
-            'status' => 200,
-            'user' => $user
-        ]);
-    }
-
-
-
-    /**
-     * Search user by name
-     *
-     * @param  str  $name
-     * @return \Illuminate\Http\Response
-     */
-    public function search($name)
-    {
-        $user  = User::where('nom', 'like', '%' . $name . '%')->get();
-        return $user;
     }
 
 
