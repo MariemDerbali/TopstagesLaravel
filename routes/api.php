@@ -21,7 +21,11 @@ use App\Http\Controllers\UserController;
 
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
+Route::post('/forgot-password', [AuthController::class, 'forgotpassword']);
+Route::post('/reset-forgottenpassword', [AuthController::class, 'resetforgottenpassword']);
+Route::post('/reset-firstloginpassword/{id}', [AuthController::class, 'resetfirstloginpassword']);
+
 
 //pour protéger les routes..
 //if loged in and isCoordinateur:

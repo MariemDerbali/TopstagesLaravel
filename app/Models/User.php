@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Models\Role;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Jenssegers\Mongodb\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
+use Jenssegers\Mongodb\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable
 {
@@ -54,4 +55,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
 
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        $url = 'http://localhost:3000/resetforgottenpassword/' . $token;
+        $this->notify(new ResetPasswordNotification($url));
+    }
 }

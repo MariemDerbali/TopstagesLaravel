@@ -20,15 +20,12 @@ class UserController extends Controller
      */
     public function index()
     {
-
-        $roleStagiaire = DB::collection('roles')->where('nom', 'Stagiaire')->first();
-        $roleStagiaireId = $roleStagiaire['nom'];
-        $allusersexcpetstagiaire = User::where('role_id', '!=', $roleStagiaireId)->get();
-
+        //Obtenir la liste de tous les utilisateurs sauf "Stagiaire"
+        $users = User::where('role_id', '!=', 'Stagiaire')->get();
 
         return response()->json([
             'status' => 200,
-            'users' => $allusersexcpetstagiaire
+            'users' => $users
         ]);
     }
 
@@ -50,6 +47,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        //Créer un nouvel utilisateur avec un rôle sélectionné sauf "Stagiaire"
         $validator = Validator::make($request->all(), [
             'matricule' => ['required', 'unique:users'],
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
@@ -62,11 +60,6 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8'],
             'image' => 'required|mimes:jpeg,jpg,png',
         ]);
-
-        //$data = $request->all();
-
-        //$data['password'] = bcrypt($request->password);
-        // $data['role_id']=
 
 
         if ($validator->fails()) {
@@ -99,11 +92,10 @@ class UserController extends Controller
 
             $user->save();
 
-            //  $user = User::create($data);
+
             return response()->json([
-                //    'user' => $user,
                 'status' => 200,
-                'message' => 'User created ',
+                'message' => 'Compte créé avec succès',
             ]);
         }
     }
@@ -116,6 +108,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        //Afficher un utilisateur par son id
         return User::where('_id', $id)->first();
     }
 
@@ -127,7 +120,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        //Afficher le formulaire de modification de l'utilisateur spécifié par id. 
+        $user = $this->show($id);
         if ($user) {
             return response()->json([
                 'status' => 200,
@@ -136,7 +130,7 @@ class UserController extends Controller
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'No user found',
+                'message' => 'Aucun utilisateur trouvé',
             ]);
         }
     }
@@ -150,6 +144,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //Mettre à jour un utilisateur spécifié par id 
         $validator = Validator::make($request->all(), [
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
             'adresse' => 'required',
@@ -194,12 +189,12 @@ class UserController extends Controller
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'User updated ',
+                    'message' => 'Compte mis à jour avec succès',
                 ]);
             } else {
                 return response()->json([
                     'status' => 404,
-                    'message' => 'User not found ',
+                    'message' => 'Utilisateur non trouvé',
                 ]);
             }
         }
@@ -219,6 +214,7 @@ class UserController extends Controller
 
     public function GetRoles()
     {
+        //Obtenir la liste de tous les rôles sauf  "Stagiaire"
         $roles =  DB::collection('roles')->where('nom', '!=', 'Stagiaire')->get();
         return response()->json([
             'status' => 200,

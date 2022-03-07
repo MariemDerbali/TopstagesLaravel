@@ -59,5 +59,14 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
+
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(3)->response(function () {
+                return response()->json([
+                    'status' => 429,
+                    'message' => 'Trop de tentatives de connexion. Veuillez réessayer dans 60 secondes.',
+                ]);
+            });
+        });
     }
 }

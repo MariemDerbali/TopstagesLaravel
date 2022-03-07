@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('image');
             $table->unique('cinpasseport');
             $table->string('etat');
+            $table->string('first_time_login');
             $table->unique('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
