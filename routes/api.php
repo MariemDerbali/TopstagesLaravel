@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DepartmentController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -42,10 +44,6 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
     Route::get('/users/{id}', [UserController::class, 'show']);
     //Update user by id
     Route::post('/users/{id}', [UserController::class, 'update']);
-    // Deactivate/Activate user by id
-    Route::get('/users-status/{id}', [UserController::class, 'toggleStatus']);
-    //search user by keyword
-    // Route::get('/users/search/{name}', [UserController::class, 'search']);
 
     Route::get('/edit-user/{id}', [UserController::class, 'edit']);
 
@@ -53,6 +51,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
     Route::post('/users', [UserController::class, 'store']);
     //get roles only for testing
     Route::get('/roles', [UserController::class, 'GetRoles']);
+
+    Route::get('/departements', [UserController::class, 'GetDepartements']);
 });
 
 
@@ -60,5 +60,16 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
 
 //for all users
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/checkingAuthenticated', function () {
+        return response()->json(['message' => 'You are in', 'status' => 200], 200);
+    });
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::post('/departments', [DepartmentController::class, 'store']);
+    Route::get('/departments', [DepartmentController::class, 'index']);
+
+
+    Route::get('/departments/{id}', [DepartmentController::class, 'show']);
+    Route::post('/departments/{id}', [DepartmentController::class, 'update']);
+    Route::get('/edit-department/{id}', [DepartmentController::class, 'edit']);
 });

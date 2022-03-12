@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -55,6 +56,7 @@ class UserController extends Controller
             'prenom' => ['required', 'string', 'max:255'],
             'adresse' => 'required',
             'role_id' => 'required',
+            'departement' => 'required',
             'cinpasseport' => ['required', 'string', 'min:7', 'max:8', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
@@ -70,8 +72,11 @@ class UserController extends Controller
         } else {
             $user = new User;
             $roleSelected = DB::collection('roles')->where('nom', $request->input('role_id'))->first();
+            $depSelected = DB::collection('departments')->where('nomdep', $request->input('departement'))->first();
 
             $user->role_id = $roleSelected['nom'];
+            $user->departement = $depSelected['nomdep'];
+
             $user->matricule = $request->input('matricule');
             $user->adresse = $request->input('adresse');
             $user->nom = $request->input('nom');
@@ -149,6 +154,7 @@ class UserController extends Controller
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
             'adresse' => 'required',
             'role_id' => 'required',
+            'departement' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -161,7 +167,11 @@ class UserController extends Controller
             $user = User::find($id);
             if ($user) {
                 $roleSelected = DB::collection('roles')->where('nom', $request->input('role_id'))->first();
+                $depSelected = DB::collection('departments')->where('nomdep', $request->input('departement'))->first();
+
                 $user->role_id = $roleSelected['nom'];
+                $user->departement = $depSelected['nomdep'];
+
                 $user->matricule = $request->input('matricule');
                 $user->adresse = $request->input('adresse');
                 $user->nom = $request->input('nom');
@@ -219,6 +229,16 @@ class UserController extends Controller
         return response()->json([
             'status' => 200,
             'roles' => $roles
+        ]);
+    }
+
+    public function GetDepartements()
+    {
+        //Obtenir la liste de tous les rôles sauf  "Stagiaire"
+        $deps =  Department::all();
+        return response()->json([
+            'status' => 200,
+            'deps' => $deps
         ]);
     }
 }
