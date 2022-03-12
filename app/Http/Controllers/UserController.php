@@ -234,8 +234,8 @@ class UserController extends Controller
 
     public function GetDepartements()
     {
-        //Obtenir la liste de tous les rôles sauf  "Stagiaire"
-        $deps =  Department::all();
+        //Obtenir la liste de tous les départements avec l"état=active
+        $deps =  DB::collection('departments')->where('etat', 'inactive')->get();
         return response()->json([
             'status' => 200,
             'deps' => $deps
