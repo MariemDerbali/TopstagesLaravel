@@ -19,7 +19,6 @@ use App\Http\Controllers\DepartmentController;
 */
 
 
-//routes publiques..
 
 // Auth
 Route::post('/register', [AuthController::class, 'register']);
@@ -29,47 +28,49 @@ Route::post('/reset-forgottenpassword', [AuthController::class, 'resetforgottenp
 Route::post('/reset-firstloginpassword/{id}', [AuthController::class, 'resetfirstloginpassword']);
 
 
-//pour protéger les routes..
-//if loged in and isCoordinateur:
+//Coordinateur:
 Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
 
-    Route::get('/checkingAuthenticated', function () {
-        return response()->json(['message' => 'You are in', 'status' => 200], 200);
+
+    Route::get('/checkingCoordinateur', function () {
+        return response()->json(['message' => 'You are coordinateur', 'status' => 200], 200);
     });
 
-    //CRUD coordinateur
-    //Get all users except stagiaire
+
     Route::get('/users', [UserController::class, 'index']);
-    //get one specific user by id
     Route::get('/users/{id}', [UserController::class, 'show']);
-    //Update user by id
     Route::post('/users/{id}', [UserController::class, 'update']);
-
     Route::get('/edit-user/{id}', [UserController::class, 'edit']);
-
-    //Create a user
     Route::post('/users', [UserController::class, 'store']);
-    //get roles only for testing
     Route::get('/roles', [UserController::class, 'GetRoles']);
+});
 
+
+
+//Servie formation
+Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function () {
+
+    Route::get('/checkingServiceFormation', function () {
+        return response()->json(['message' => 'You are coordinateur', 'status' => 200], 200);
+    });
+
+
+    Route::post('/departments', [DepartmentController::class, 'store']);
+    Route::get('/departments', [DepartmentController::class, 'index']);
+    Route::get('/departments/{id}', [DepartmentController::class, 'show']);
+    Route::post('/departments/{id}', [DepartmentController::class, 'update']);
+    Route::get('/edit-department/{id}', [DepartmentController::class, 'edit']);
     Route::get('/departements', [UserController::class, 'GetDepartements']);
 });
 
 
 
 
-//for all users
+
+//Tous les utilisateurs
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
     Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::post('/departments', [DepartmentController::class, 'store']);
-    Route::get('/departments', [DepartmentController::class, 'index']);
-
-
-    Route::get('/departments/{id}', [DepartmentController::class, 'show']);
-    Route::post('/departments/{id}', [DepartmentController::class, 'update']);
-    Route::get('/edit-department/{id}', [DepartmentController::class, 'edit']);
 });

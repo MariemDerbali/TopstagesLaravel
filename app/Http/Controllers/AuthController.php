@@ -87,13 +87,18 @@ class AuthController extends Controller
                         'user_id' => $user->_id,
                     ]);
                 } else if (($user->first_time_login !== '')) {
-                    $role = DB::collection('roles')->where('nom', 'Coordinateur')->first();
 
-                    if ($user->role_id == $role['nom']) {
-                        $roleCordi = $role['nom'];
+                    $roleCordinateur = DB::collection('roles')->where('nom', 'Coordinateur')->first();
+                    $roleServiceFormation = DB::collection('roles')->where('nom', 'ServiceFormation')->first();
+
+                    if ($user->role_id == $roleCordinateur['nom']) {
+                        $role = $roleCordinateur['nom'];
                         $token = $user->createToken($user->email . '_CoordinateurToken', ['server:coordinateur'])->plainTextToken;
+                    } else if ($user->role_id == $roleServiceFormation['nom']) {
+                        $role = $roleServiceFormation['nom'];
+                        $token = $user->createToken($user->email . '_ServiceFormationToken', ['server:serviceformation'])->plainTextToken;
                     } else {
-                        $roleCordi = '';
+                        $role = '';
                         $token = $user->createToken($user->email . '_Token', [''])->plainTextToken;
                     }
 
@@ -102,7 +107,7 @@ class AuthController extends Controller
                         'username' => $user->nom,
                         'token' => $token,
                         'message' => 'Connecté avec succès!',
-                        'role' => $roleCordi,
+                        'role' => $role,
                     ]);
                 }
             }
