@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,9 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::post('/departments/{id}', [DepartmentController::class, 'update']);
     Route::get('/edit-department/{id}', [DepartmentController::class, 'edit']);
     Route::get('/departements', [UserController::class, 'GetDepartements']);
+
+
+    Route::post('/questions', [QuestionController::class, 'store']);
 });
 
 

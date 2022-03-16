@@ -14,14 +14,10 @@ class CreateQuestionsTable extends Migration
     public function up()
     {
         Schema::create('questions', function (Blueprint $table) {
-            $table->id();
             $table->string('questionText');
             $table->string('questionImage');
             $table->string('duree');
             $table->string('niveau'); // Facile , Moyenne , Difficile 
-            $table->string('reponseText');
-            $table->string('reponseImage');
-            $table->boolean('reponseCorrect');
             $table->string('etat');
             $table->timestamps();
         });
