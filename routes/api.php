@@ -5,8 +5,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\DepartmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,10 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
 
 
     Route::post('/questions', [QuestionController::class, 'store']);
+    Route::get('/questions', [QuestionController::class, 'index']);
+
+
+    Route::post('/reponses', [ReponseController::class, 'store']);
 });
 
 

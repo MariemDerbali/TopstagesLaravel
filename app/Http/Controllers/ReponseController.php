@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Question;
 
-class QuestionController extends Controller
+class ReponseController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,12 +15,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $questions = Question::all();
-
-        return response()->json([
-            'status' => 200,
-            'questions' => $questions,
-        ]);
+        //
     }
 
     /**
@@ -45,10 +40,13 @@ class QuestionController extends Controller
 
         $validator = Validator::make($request->all(), [
 
-            'questionText',
-            'questionImage',
-            'duree' => 'required',
-            'niveau' => 'required',
+            'reponseText',
+            'reponseImage',
+            'reponseCorrecte' => 'required',
+        ]);
+
+        $validatorquestionId = Validator::make($request->all(), [
+            'questionID' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -57,41 +55,41 @@ class QuestionController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-
-
-            $check1 =  $request->input('questionText');
-            $check2 =  $request->file('questionImage');
+            $check1 =  $request->input('reponseText');
+            $check2 =  $request->file('reponseImage');
 
             if ($check1 == null && $check2 == null) {
 
                 return response()->json([
                     'status' => 505,
-                    'message' => 'Les champs des questions sont obligatoires',
+                    'message' => 'Les champs des réponses sont obligatoires',
+                ]);
+            } else if ($validatorquestionId->fails()) {
+                return response()->json([
+                    'status' => 423,
+                    'message' => "Vous devez d'abord créer une question",
                 ]);
             } else {
-                $question = new Question;
-                $question->questionText = $request->input('questionText');
-                $question->duree = $request->input('duree');
-                $question->niveau = $request->input('niveau');
+                $reponse = new Reponse;
+                $reponse->reponseText = $request->input('reponseText');
+                $reponse->reponseCorrecte = $request->input('reponseCorrecte');
+                $reponse->questionID = $request->questionID;
 
-                if ($request->hasFile('questionImage')) {
-                    $file = $request->file('questionImage');
+                if ($request->hasFile('reponseImage')) {
+                    $file = $request->file('reponseImage');
                     $extension = $file->getClientOriginalExtension();
                     $filename = time() . '.' . $extension;
-                    $file->move('img/question/', $filename);
-                    $question->questionImage = 'img/question/' . $filename;
+                    $file->move('img/reponse/', $filename);
+                    $reponse->reponseImage = 'img/reponse/' . $filename;
                 }
 
-                $question->etat = 'active';
-
-                $question->save();
-                $id = $question->_id;
+                $reponse->save();
 
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Question est créée avec succès',
-                    'questionId' => $id
+                    'message' => 'Réponse est créée avec succès',
+                    'reponse' => $reponse,
 
                 ]);
             }
