@@ -104,7 +104,7 @@ class ReponseController extends Controller
      */
     public function show($id)
     {
-        //
+        return Reponse::where('_id', $id)->first();
     }
 
     /**
@@ -115,7 +115,18 @@ class ReponseController extends Controller
      */
     public function edit($id)
     {
-        //
+        $reponse = $this->show($id);
+        if ($reponse) {
+            return response()->json([
+                'status' => 200,
+                'reponse' => $reponse,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Aucune reponse trouvée',
+            ]);
+        }
     }
 
     /**
@@ -127,7 +138,47 @@ class ReponseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'reponseText',
+            'reponseImage',
+            'reponseCorrecte' => 'required',
+
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages(),
+            ]);
+        } else {
+            $reponse = Reponse::find($id);
+
+            if ($reponse) {
+
+                $reponse->reponseText = $request->input('reponseText');
+                $reponse->reponseCorrecte = $request->input('reponseCorrecte');
+
+                if ($request->hasFile('reponseImage')) {
+                    $file = $request->file('reponseImage');
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = time() . '.' . $extension;
+                    $file->move('img/reponse/', $filename);
+                    $reponse->reponseImage = 'img/reponse/' . $filename;
+                }
+
+                $reponse->update();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Réponse mise à jour avec succès ',
+
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Réponse non trouvée',
+                ]);
+            }
+        }
     }
 
     /**
@@ -138,6 +189,27 @@ class ReponseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $reponse = Reponse::find($id);
+        if ($reponse) {
+
+            $reponsedeleted = $reponse->delete();
+
+            if ($reponsedeleted) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'réponse supprimée avec succès'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 401,
+                    'message' => "réponse n'a pas supprimée"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Aucune réponse trouvée'
+            ]);
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Question;
+use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
 {
@@ -106,7 +107,7 @@ class QuestionController extends Controller
      */
     public function show($id)
     {
-        //
+        return Question::where('_id', $id)->first();
     }
 
     /**
@@ -117,7 +118,18 @@ class QuestionController extends Controller
      */
     public function edit($id)
     {
-        //
+        $question = $this->show($id);
+        if ($question) {
+            return response()->json([
+                'status' => 200,
+                'question' => $question,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Aucune question trouvée',
+            ]);
+        }
     }
 
     /**
@@ -129,7 +141,50 @@ class QuestionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'questionText',
+            'questionImage',
+            'duree' => 'required',
+            'niveau' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages(),
+            ]);
+        } else {
+            $question = Question::find($id);
+
+            if ($question) {
+
+                $question->questionText = $request->input('questionText');
+                $question->duree = $request->input('duree');
+                $question->niveau = $request->input('niveau');
+
+                if ($request->hasFile('questionImage')) {
+                    $file = $request->file('questionImage');
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = time() . '.' . $extension;
+                    $file->move('img/question/', $filename);
+                    $question->questionImage = 'img/question/' . $filename;
+                }
+
+                $question->etat = $request->input('etat');
+
+                $question->update();
+                // $id = $question->_id;
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Question mise à jour avec succès ',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Question non trouvée',
+                ]);
+            }
+        }
     }
 
     /**
@@ -141,5 +196,15 @@ class QuestionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getReponses($id)
+    {
+        $reponses = DB::collection('reponses')->where('questionID', $id)->get();
+
+        return response()->json([
+            'status' => 200,
+            'reponses' => $reponses
+        ]);
     }
 }

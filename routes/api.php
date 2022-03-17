@@ -40,11 +40,11 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
 
 
     Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{id}', [UserController::class, 'show']);
     Route::post('/users/{id}', [UserController::class, 'update']);
     Route::get('/edit-user/{id}', [UserController::class, 'edit']);
     Route::post('/users', [UserController::class, 'store']);
     Route::get('/roles', [UserController::class, 'GetRoles']);
+    Route::get('/departements', [UserController::class, 'GetDepartements']);
 });
 
 
@@ -59,17 +59,24 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
 
     Route::post('/departments', [DepartmentController::class, 'store']);
     Route::get('/departments', [DepartmentController::class, 'index']);
-    Route::get('/departments/{id}', [DepartmentController::class, 'show']);
     Route::post('/departments/{id}', [DepartmentController::class, 'update']);
     Route::get('/edit-department/{id}', [DepartmentController::class, 'edit']);
-    Route::get('/departements', [UserController::class, 'GetDepartements']);
 
 
     Route::post('/questions', [QuestionController::class, 'store']);
     Route::get('/questions', [QuestionController::class, 'index']);
 
 
+    Route::post('/questions/{id}', [QuestionController::class, 'update']);
+    Route::get('/edit-question/{id}', [QuestionController::class, 'edit']);
+    Route::get('/reponses/{id}', [QuestionController::class, 'GetReponses']);
+
+
+    Route::delete('/delete-reponse/{id}', [ReponseController::class, 'destroy']);
     Route::post('/reponses', [ReponseController::class, 'store']);
+    Route::post('/reponses/{id}', [ReponseController::class, 'update']);
+
+    Route::get('/edit-reponse/{id}', [ReponseController::class, 'edit']);
 });
 
 
