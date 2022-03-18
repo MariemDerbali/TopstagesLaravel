@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\DepartmentController;
@@ -38,7 +39,6 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
         return response()->json(['message' => 'You are coordinateur', 'status' => 200], 200);
     });
 
-
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/users/{id}', [UserController::class, 'update']);
     Route::get('/edit-user/{id}', [UserController::class, 'edit']);
@@ -53,8 +53,9 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
 Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function () {
 
     Route::get('/checkingServiceFormation', function () {
-        return response()->json(['message' => 'You are coordinateur', 'status' => 200], 200);
+        return response()->json(['message' => 'You are service formation', 'status' => 200], 200);
     });
+
 
 
     Route::post('/departments', [DepartmentController::class, 'store']);
@@ -88,5 +89,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/checkingAuthenticated', function () {
         return response()->json(['message' => 'You are in', 'status' => 200], 200);
     });
+
+    Route::get('/currentuser', [AuthController::class, 'getCurrentUser']);
+
+    Route::get('/edit-profil/{id}', [ProfileController::class, 'editProfil']);
+    Route::post('/profil/{id}', [ProfileController::class, 'updateProfil']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 });

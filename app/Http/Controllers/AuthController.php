@@ -126,6 +126,24 @@ class AuthController extends Controller
     }
 
 
+    public function getCurrentUser()
+    {
+        $id = auth()->user()->_id;
+        $currentuser = User::find($id);
+        if ($currentuser) {
+            return response()->json([
+                'status' => 200,
+                'currentuser' => $currentuser
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Aucun utilisateur trouvé'
+            ]);
+        }
+    }
+
+
     public function forgotpassword(Request $request)
     {
 
