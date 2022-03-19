@@ -60,6 +60,7 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
 
+        //Pour empêcher l'utilisateur d'essayer de se connecter après 3 tentatives de connexion infructueuses
         RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(3)->response(function () {
                 return response()->json([

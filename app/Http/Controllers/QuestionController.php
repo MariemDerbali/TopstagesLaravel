@@ -16,6 +16,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
+        //obtenir la liste de toutes les questions
         $questions = Question::all();
 
         return response()->json([
@@ -43,7 +44,7 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
 
-
+        //création de la question
         $validator = Validator::make($request->all(), [
 
             'questionText',
@@ -59,7 +60,7 @@ class QuestionController extends Controller
             ]);
         } else {
 
-
+            //vérifier si les champs de la question ne sont pas vides
             $check1 =  $request->input('questionText');
             $check2 =  $request->file('questionImage');
 
@@ -67,9 +68,10 @@ class QuestionController extends Controller
 
                 return response()->json([
                     'status' => 505,
-                    'message' => 'Les champs des questions sont obligatoires',
+                    'message' => 'Les champs de la question sont obligatoires',
                 ]);
             } else {
+                //Sinon créer la question
                 $question = new Question;
                 $question->questionText = $request->input('questionText');
                 $question->duree = $request->input('duree');
@@ -118,6 +120,7 @@ class QuestionController extends Controller
      */
     public function edit($id)
     {
+        //Afficher le formulaire de modification de la question
         $question = $this->show($id);
         if ($question) {
             return response()->json([
@@ -140,7 +143,7 @@ class QuestionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    { //Modifier la question
         $validator = Validator::make($request->all(), [
             'questionText',
             'questionImage',
@@ -172,7 +175,6 @@ class QuestionController extends Controller
                 $question->etat = $request->input('etat');
 
                 $question->update();
-                // $id = $question->_id;
 
                 return response()->json([
                     'status' => 200,
@@ -198,6 +200,7 @@ class QuestionController extends Controller
         //
     }
 
+    //Pour obtenir la liste des réponse de la question spécifié par son id
     public function getReponses($id)
     {
         $reponses = DB::collection('reponses')->where('questionID', $id)->get();

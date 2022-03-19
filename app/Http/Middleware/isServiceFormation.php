@@ -18,6 +18,8 @@ class isServiceFormation
     public function handle(Request $request, Closure $next)
     {
 
+
+        //Pour protéger les routes pour le service formation
         if (Auth::check()) {
             if (auth()->user()->tokenCan('server:serviceformation')) {
                 return $next($request);

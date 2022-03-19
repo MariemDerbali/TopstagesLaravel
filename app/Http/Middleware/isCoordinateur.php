@@ -17,20 +17,22 @@ class isCoordinateur
      */
     public function handle(Request $request, Closure $next)
     {
+
+        //Pour protéger les routes pour le coordinateur
         if (Auth::check()) {
             if (auth()->user()->tokenCan('server:coordinateur')) {
                 return $next($request);
             } else {
                 return response()->json([
                     'status' => 403,
-                    'message' => 'Access Denied..You are not coordinateur.',
+                    'message' => "Accès refusé..Vous n'êtes pas un coordinateur.",
 
                 ]);
             }
         } else {
             return response()->json([
                 'status' => 401,
-                'message' => 'Please Login first',
+                'message' => "S'il vous plait Connectez-vous d'abord",
 
             ]);
         }

@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //Obtenir la liste de tous les utilisateurs sauf "Stagiaire"
+        //obtenir la liste de tous les utilisateurs avec un rôle différent de stagiarie
         $users = User::where('role_id', '!=', 'Stagiaire')->get();
 
         return response()->json([
@@ -48,7 +48,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //Créer un nouvel utilisateur avec un rôle sélectionné sauf "Stagiaire"
+        //Pour créer un utilisateur
         $validator = Validator::make($request->all(), [
             'matricule' => ['required', 'unique:users'],
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
@@ -149,7 +149,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //Mettre à jour un utilisateur spécifié par id 
+        //Mettre à jour un utilisateur  
         $validator = Validator::make($request->all(), [
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
             'adresse' => 'required',
@@ -234,8 +234,8 @@ class UserController extends Controller
 
     public function GetDepartements()
     {
-        //Obtenir la liste de tous les départements avec l"état=active
-        $deps =  DB::collection('departments')->where('etat', 'inactive')->get();
+        //Obtenir la liste de tous les départements activés
+        $deps =  DB::collection('departments')->where('etat', 'active')->get();
         return response()->json([
             'status' => 200,
             'deps' => $deps

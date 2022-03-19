@@ -17,6 +17,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
+        //obtenir la liste de tous les départements
         $deps = Department::all();
 
         return response()->json([
@@ -43,6 +44,7 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
+        //création des départements
         $validator = Validator::make($request->all(), [
             'nomdep' => ['required', 'string', 'max:255'],
             'chefdep' => ['required', 'string', 'max:255']
@@ -86,6 +88,7 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
+        //Afficher le formulaire de modification de le département spécifié par id. 
         $dep = $this->show($id);
         if ($dep) {
             return response()->json([
@@ -109,6 +112,7 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //Mettre à jour un département
         $validator = Validator::make($request->all(), [
             'nomdep' => ['required', 'string', 'max:255'],
             'chefdep' => ['required', 'string', 'max:255']

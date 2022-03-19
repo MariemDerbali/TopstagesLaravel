@@ -36,7 +36,7 @@ class ReponseController extends Controller
      */
     public function store(Request $request)
     {
-
+        //Création de la réponse
 
         $validator = Validator::make($request->all(), [
 
@@ -44,7 +44,7 @@ class ReponseController extends Controller
             'reponseImage',
             'reponseCorrecte' => 'required',
         ]);
-
+        //spécifier la question de la réponse
         $validatorquestionId = Validator::make($request->all(), [
             'questionID' => 'required',
         ]);
@@ -55,6 +55,7 @@ class ReponseController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
+            //vérifier si les champs de réponses ne sont pas vides
             $check1 =  $request->input('reponseText');
             $check2 =  $request->file('reponseImage');
 
@@ -70,6 +71,7 @@ class ReponseController extends Controller
                     'message' => "Vous devez d'abord créer une question",
                 ]);
             } else {
+                //sinon créer la réponse
                 $reponse = new Reponse;
                 $reponse->reponseText = $request->input('reponseText');
                 $reponse->reponseCorrecte = $request->input('reponseCorrecte');
@@ -115,6 +117,7 @@ class ReponseController extends Controller
      */
     public function edit($id)
     {
+        //afficher le formulaire de la modification de la réponse
         $reponse = $this->show($id);
         if ($reponse) {
             return response()->json([
@@ -138,6 +141,7 @@ class ReponseController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //Modifier la réponse
         $validator = Validator::make($request->all(), [
             'reponseText',
             'reponseImage',
@@ -189,6 +193,7 @@ class ReponseController extends Controller
      */
     public function destroy($id)
     {
+        //Pour supprimer la réponse
         $reponse = Reponse::find($id);
         if ($reponse) {
 

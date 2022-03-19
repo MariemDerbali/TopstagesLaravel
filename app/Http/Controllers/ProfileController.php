@@ -17,7 +17,7 @@ class ProfileController extends Controller
     }
 
     public function editProfil($id)
-    {
+    { //Afficher le formulaire de modification de profil
         $user = $this->show($id);
         if ($user) {
             return response()->json([
@@ -33,7 +33,7 @@ class ProfileController extends Controller
     }
 
     public function updateProfil(Request $request, $id)
-    {
+    { //Mettre à jour le profil de l'utilisateur 
         $validator = Validator::make($request->all(), [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
@@ -79,7 +79,7 @@ class ProfileController extends Controller
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Profile mis à jour avec succès',
+                    'message' => 'Profil mis à jour avec succès',
                 ]);
             } else {
                 return response()->json([
