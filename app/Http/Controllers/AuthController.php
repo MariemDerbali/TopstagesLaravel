@@ -90,6 +90,11 @@ class AuthController extends Controller
                     'status' => 401,
                     'message' => 'Informations incorrectes',
                 ]);
+            } else if ($user->etat == 'inactive') {
+                return response()->json([
+                    'status' => 533,
+                    'message' => "Votre compte est suspendu, veuillez contacter le coordinateur. ",
+                ]);
             } else {
                 //vérification de la première connexion et si le rôle est stagiaire
                 if (($user->role_id != 'Stagiaire') && ($user->first_time_login == '')) {

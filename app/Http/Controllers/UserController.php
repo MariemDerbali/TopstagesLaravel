@@ -179,7 +179,6 @@ class UserController extends Controller
                 $user->tel = $request->input('tel');
                 $user->cinpasseport = $request->input('cinpasseport');
                 $user->email = $request->input('email');
-                $user->password = bcrypt($request->input('password'));
 
                 if ($request->hasFile('image')) {
                     $path = $user->image;
