@@ -68,7 +68,7 @@ class QuestionController extends Controller
 
                 return response()->json([
                     'status' => 505,
-                    'message' => 'Les champs de la question sont obligatoires',
+                    'message' => 'Veuillez préciser le type de question',
                 ]);
             } else {
                 //Sinon créer la question
@@ -178,7 +178,7 @@ class QuestionController extends Controller
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Question mise à jour avec succès ',
+                    'message' => 'Mise à jour effectuée avec succès',
                 ]);
             } else {
                 return response()->json([

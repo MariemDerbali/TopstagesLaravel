@@ -50,16 +50,16 @@ class UserController extends Controller
     {
         //Pour créer un utilisateur
         $validator = Validator::make($request->all(), [
-            'matricule' => ['required', 'unique:users'],
+            'matricule' => ['required', 'numeric', 'unique:users'],
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
-            'nom' => ['required', 'string', 'max:255'],
-            'prenom' => ['required', 'string', 'max:255'],
+            'nom' => 'required|alpha',
+            'prenom' => 'required|alpha',
             'adresse' => 'required',
             'role_id' => 'required',
             'departement' => 'required',
             'cinpasseport' => ['required', 'string', 'min:7', 'max:8', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
+            'email' => ['required', 'string', 'email', 'unique:users'],
+            'password' => ['required', 'string', 'min:6', 'max:25'],
             'image' => 'required|mimes:jpeg,jpg,png',
         ]);
 

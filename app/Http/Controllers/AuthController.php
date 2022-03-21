@@ -24,11 +24,11 @@ class AuthController extends Controller
 
         //validation des requêtes
         $validator = Validator::make($request->all(), [
-            'nom' => ['required', 'string', 'max:255'],
-            'prenom' => ['required', 'string', 'max:255'],
+            'nom' => 'required|alpha',
+            'prenom' => 'required|alpha',
             'cinpasseport' => ['required', 'string', 'min:7', 'max:8', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => ['required', 'string', 'email', 'unique:users'],
+            'password' => ['required', 'string', 'min:6', 'max:25', 'confirmed'],
 
         ]);
         //Si la validation échoue, une réponse d'erreur sera renvoyée
@@ -72,7 +72,7 @@ class AuthController extends Controller
         //validation des requêtes
         $validator = Validator::make($request->all(), [
             'cinpasseport' => ['required', 'string', 'min:7', 'max:8'],
-            'password' => ['required', 'string', 'min:8']
+            'password' => ['required', 'string']
 
         ]);
 
@@ -214,7 +214,7 @@ class AuthController extends Controller
         //validation des requêtes
         $validator = Validator::make($request->all(), [
             'token' => 'required',
-            'password' => ['required', 'string', 'confirmed', 'min:8', RulesPassword::defaults()],
+            'password' => ['required', 'string', 'confirmed', 'min:6', RulesPassword::defaults()],
         ]);
 
         //Si la validation échoue, une réponse d'erreur sera renvoyée
@@ -238,7 +238,7 @@ class AuthController extends Controller
             if ($status == Password::PASSWORD_RESET) {
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Mot de passe réinitialisé avec succès'
+                    'message' => 'Votre mot de passe à été réinitialisé avec succès'
                 ]);
             } else {
                 return response()->json([
@@ -253,7 +253,7 @@ class AuthController extends Controller
     public function resetfirstloginpassword(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'password' => ['required', 'string', 'confirmed', 'min:8', RulesPassword::defaults()],
+            'password' => ['required', 'string', 'confirmed', 'min:6', RulesPassword::defaults()],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -262,15 +262,26 @@ class AuthController extends Controller
         } else {
             $user = User::find($id);
             if ($user) {
-                $user->password = bcrypt($request->password);
-                //enregistrement la date de la première connexion
-                $user->first_time_login = Carbon::now()->toDateTimeString();
+                //vérifier si le nouveau mot de passe saisi est le même que l'ancien mot de passe
+                if (Hash::check($request->password, $user->password)) {
+                    return response()->json([
+                        'status' => 501,
+                        'message' => 'Vous avez utilisé un ancien mot de passe. Veuillez en choisir un autre.',
+                    ]);
+                } else {
 
-                $user->update();
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Mot de passe réinitialisé avec succès',
-                ]);
+                    $user->password = bcrypt($request->password);
+
+
+                    //enregistrement la date de la première connexion
+                    $user->first_time_login = Carbon::now()->toDateTimeString();
+
+                    $user->update();
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'Votre mot de passe à été changé avec succès',
+                    ]);
+                }
             } else {
                 return response()->json([
                     'status' => 404,

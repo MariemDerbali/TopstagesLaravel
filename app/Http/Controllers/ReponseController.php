@@ -63,7 +63,7 @@ class ReponseController extends Controller
 
                 return response()->json([
                     'status' => 505,
-                    'message' => 'Les champs des réponses sont obligatoires',
+                    'message' => 'Veuillez préciser le type de réponse',
                 ]);
             } else if ($validatorquestionId->fails()) {
                 return response()->json([
@@ -173,7 +173,7 @@ class ReponseController extends Controller
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Réponse mise à jour avec succès ',
+                    'message' => 'Mise à jour effectuée avec succès ',
 
                 ]);
             } else {
