@@ -57,7 +57,7 @@ class UserController extends Controller
             'adresse' => 'required',
             'role_id' => 'required',
             'departement' => 'required',
-            'cinpasseport' => ['required', 'string', 'min:7', 'max:8', 'unique:users'],
+            'loginTOPNET' => ['required', 'string', 'unique:users'],
             'email' => ['required', 'string', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'max:25'],
             'image' => 'required|mimes:jpeg,jpg,png',
@@ -82,7 +82,7 @@ class UserController extends Controller
             $user->nom = $request->input('nom');
             $user->prenom = $request->input('prenom');
             $user->tel = $request->input('tel');
-            $user->cinpasseport = $request->input('cinpasseport');
+            $user->loginTOPNET = $request->input('loginTOPNET');
             $user->email = $request->input('email');
             $user->password = bcrypt($request->input('password'));
             $user->etat = 'active';
@@ -177,7 +177,7 @@ class UserController extends Controller
                 $user->nom = $request->input('nom');
                 $user->prenom = $request->input('prenom');
                 $user->tel = $request->input('tel');
-                $user->cinpasseport = $request->input('cinpasseport');
+                $user->loginTOPNET = $request->input('loginTOPNET');
                 $user->email = $request->input('email');
 
                 if ($request->hasFile('image')) {

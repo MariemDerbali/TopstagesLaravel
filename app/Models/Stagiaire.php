@@ -10,12 +10,13 @@ use App\Notifications\ResetPasswordNotification;
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class User extends Authenticatable
+class Stagiaire extends Authenticatable
+
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $connection = 'mongodb';
-    protected $collection = 'users';
+    protected $collection = 'stagiaires';
 
     /**
      * The attributes that are mass assignable.
@@ -26,15 +27,11 @@ class User extends Authenticatable
         'nom',
         'prenom',
         'description',
-        'matricule',
-        'loginTOPNET',
         'role_id',
         'adresse',
-        'departement',
         'tel',
         'image',
         'cinpasseport',
-        'etat',
         'email',
         'password',
     ];
@@ -61,7 +58,7 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token)
     {
-        $url = 'http://localhost:3000/topnet-resetforgottenpassword/' . $token;
+        $url = 'http://localhost:3000/resetforgottenpassword/' . $token;
         $this->notify(new ResetPasswordNotification($url));
     }
 }

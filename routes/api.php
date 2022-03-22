@@ -23,14 +23,28 @@ use App\Http\Controllers\DepartmentController;
 
 
 
-//Route pour s'inscrire
+//Route pour s'inscrire (Stagiaire)
 Route::post('/register', [AuthController::class, 'register']);
-//Route pour s'authentifier
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
+
+//Route pour s'authentifier (stagiaire)
+Route::post('/login-locale', [AuthController::class, 'LocalLogin'])->middleware('throttle:login');
+
+//Route pour s'authentifier (coordinateur/service formation/encadrant/chef département)
+Route::post('/login-stagiaire', [AuthController::class, 'StagiaireLogin'])->middleware('throttle:login');
+
+
+
 //Route pour l'envoi d'un lien de vérification par e-mail
 Route::post('/forgot-password', [AuthController::class, 'forgotpassword']);
 //Route pour récupérer le mot de passe oublié
 Route::post('/reset-forgottenpassword', [AuthController::class, 'resetforgottenpassword']);
+
+
+Route::post('/stagiaire-forgot-password', [AuthController::class, 'Stagiaireforgotpassword']);
+Route::post('/stagiaire-reset-forgottenpassword', [AuthController::class, 'Stagiaireresetforgottenpassword']);
+
+
+
 //Route pour changer le mot de passe lors de la première connexion
 Route::post('/reset-firstloginpassword/{id}', [AuthController::class, 'resetfirstloginpassword']);
 
