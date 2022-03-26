@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class isServiceFormation
+class isStagiaire
 {
     /**
      * Handle an incoming request.
@@ -17,23 +17,21 @@ class isServiceFormation
      */
     public function handle(Request $request, Closure $next)
     {
-
-
-        //Pour protéger les routes pour le service formation
+        //Pour protéger les routes pour le stagiaire
         if (Auth::check()) {
-            if (auth()->user()->tokenCan('server:serviceformation')) {
+            if (auth()->user()->tokenCan('server:stagiaire')) {
                 return $next($request);
             } else {
                 return response()->json([
-                    'status' => 407,
-                    'message' => "Accès refusé..Vous n'êtes pas un service formation.",
+                    'status' => 405,
+                    'message' => "Accès refusé..Vous n'êtes pas un stagiaire.",
 
                 ]);
             }
         } else {
             return response()->json([
                 'status' => 401,
-                'message' => 'Please Login first',
+                'message' => "S'il vous plait Connectez-vous d'abord",
 
             ]);
         }

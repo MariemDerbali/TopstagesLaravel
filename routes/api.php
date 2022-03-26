@@ -5,10 +5,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileStagiaire;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\StagiaireController;
 use App\Http\Controllers\DepartmentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,37 +26,36 @@ use App\Http\Controllers\DepartmentController;
 
 
 
-//Route pour s'inscrire (Stagiaire)
+
+
+//--------------------------AUTHENTIFICATION-----------------------------------
+
+//-------------Pour le stagiaire
+//Route pour s'inscrire 
 Route::post('/register', [AuthController::class, 'register']);
-
-//Route pour s'authentifier (stagiaire)
-Route::post('/login-locale', [AuthController::class, 'LocalLogin'])->middleware('throttle:login');
-
-//Route pour s'authentifier (coordinateur/service formation/encadrant/chef département)
+//Route pour s'authentifier 
 Route::post('/login-stagiaire', [AuthController::class, 'StagiaireLogin'])->middleware('throttle:login');
-
-
-
-//Route pour l'envoi d'un lien de vérification par e-mail
-Route::post('/forgot-password', [AuthController::class, 'forgotpassword']);
-//Route pour récupérer le mot de passe oublié
-Route::post('/reset-forgottenpassword', [AuthController::class, 'resetforgottenpassword']);
-
-
+//Route pour l'envoi d'un lien de vérification par e-mail 
 Route::post('/stagiaire-forgot-password', [AuthController::class, 'Stagiaireforgotpassword']);
+//Route pour réinitialiser le mot de passe oublié 
 Route::post('/stagiaire-reset-forgottenpassword', [AuthController::class, 'Stagiaireresetforgottenpassword']);
 
-
-
+//-------------Pour Topnet
+//Route pour s'authentifier 
+Route::post('/login-locale', [AuthController::class, 'LocalLogin'])->middleware('throttle:login');
+//Route pour l'envoi d'un lien de vérification par e-mail 
+Route::post('/forgot-password', [AuthController::class, 'forgotpassword']);
+//Route pour réinitialiser le mot de passe oublié
+Route::post('/reset-forgottenpassword', [AuthController::class, 'resetforgottenpassword']);
 //Route pour changer le mot de passe lors de la première connexion
 Route::post('/reset-firstloginpassword/{id}', [AuthController::class, 'resetfirstloginpassword']);
 
 
-//Routes privés pour le Coordinateur:
+//--------------------------Routes privés pour le Coordinateur-----------------------------------
+
 Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
 
-
-    //Route pour vérifier que l'utilisateur qui est connecté est coordinateur
+    //Route pour vérifier que l'utilisateur authentifié est coordinateur
     Route::get('/checkingCoordinateur', function () {
         return response()->json(['message' => 'Vous êtes coordinateur', 'status' => 200], 200);
     });
@@ -73,10 +75,10 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
 
 
 
-//Routes privés pour le Servie formation
+//--------------------------Routes privés pour le Service formation-----------------------------------
 Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function () {
 
-    //Route pour vérifier que l'utilisateur qui est connecté est service formation
+    //Route pour vérifier que l'utilisateur authentifié est service formation
     Route::get('/checkingServiceFormation', function () {
         return response()->json(['message' => 'Vous êtes service formation', 'status' => 200], 200);
     });
@@ -111,13 +113,29 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
 
 
 
+//--------------------------Routes privés pour le Stagiaire-----------------------------------
+Route::group(['middleware' => ['auth:sanctum', 'isStagiaire']], function () {
 
-
-//Routes pour tous les utilisateurs authentifiés
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/checkingAuthenticated', function () {
-        return response()->json(['message' => 'You are in', 'status' => 200], 200);
+    //Route pour vérifier que l'utilisateur authentifié est stagiaire
+    Route::get('/checkingStagiaire', function () {
+        return response()->json(['message' => 'Vous êtes stagiaire', 'status' => 200], 200);
     });
+
+
+    //Route pour obtenir le stagiaire actuellement connecté
+    Route::get('/currentstagiaire', [StagiaireController::class, 'getCurrentStagiaire']);
+    //Route pour mettre à jour le profil
+    Route::get('/edit-profil-stagiaire/{id}', [ProfileStagiaire::class, 'edit']);
+    Route::post('/profil-stagiaire/{id}', [ProfileStagiaire::class, 'update']);
+});
+
+//--------------------------Routes pour Topnet (tous les utilisateurs authentifiés)----------------------------------
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+
+    /* Route::get('/checkingAuthenticated', function () {
+        return response()->json(['message' => 'You are in', 'status' => 200], 200);
+    });*/
 
     //Route pour obtenir l'utilisateur actuellement connecté
     Route::get('/currentuser', [AuthController::class, 'getCurrentUser']);

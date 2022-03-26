@@ -163,7 +163,7 @@ class AuthController extends Controller
                     'message' => 'Informations incorrectes',
                 ]);
             } else {
-                $token = $user->createToken($user->email . '_Token', [''])->plainTextToken;
+                $token = $user->createToken($user->email . '_StagiaireToken', ['server:stagiaire'])->plainTextToken;
 
                 return response()->json([
                     'status' => 200,
@@ -206,6 +206,9 @@ class AuthController extends Controller
             ]);
         }
     }
+
+
+
 
     //TOPNET
     //Pour récupérer le mot de passe oublié
