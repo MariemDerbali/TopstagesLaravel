@@ -111,6 +111,23 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::get('/edit-reponse/{id}', [ReponseController::class, 'edit']);
 });
 
+//--------------------------Routes privés pour l'Encadrant-----------------------------------
+Route::group(['middleware' => ['auth:sanctum', 'isEncadrant']], function () {
+
+    //Route pour vérifier que l'utilisateur authentifié est encadrant
+    Route::get('/checkingEncadrant', function () {
+        return response()->json(['message' => 'Vous êtes encadrant', 'status' => 200], 200);
+    });
+});
+
+//--------------------------Routes privés pour le Chef département-----------------------------------
+Route::group(['middleware' => ['auth:sanctum', 'isChefDepartement']], function () {
+
+    //Route pour vérifier que l'utilisateur authentifié est chef département
+    Route::get('/checkingChefDepartement', function () {
+        return response()->json(['message' => 'Vous êtes chef département', 'status' => 200], 200);
+    });
+});
 
 
 //--------------------------Routes privés pour le Stagiaire-----------------------------------

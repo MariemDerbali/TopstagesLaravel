@@ -108,19 +108,30 @@ class AuthController extends Controller
 
                     $roleCordinateur = DB::collection('roles')->where('nom', 'Coordinateur')->first();
                     $roleServiceFormation = DB::collection('roles')->where('nom', 'ServiceFormation')->first();
+                    $roleEncadrant = DB::collection('roles')->where('nom', 'Encadrant')->first();
+                    $roleChefDepartement = DB::collection('roles')->where('nom', 'ChefDepartement')->first();
 
                     //création de token pour le coordinateur
                     if ($user->role_id == $roleCordinateur['nom']) {
+
                         $role = $roleCordinateur['nom'];
                         $token = $user->createToken($user->email . '_CoordinateurToken', ['server:coordinateur'])->plainTextToken;
 
                         //création de token pour le service formation
                     } else if ($user->role_id == $roleServiceFormation['nom']) {
+
                         $role = $roleServiceFormation['nom'];
                         $token = $user->createToken($user->email . '_ServiceFormationToken', ['server:serviceformation'])->plainTextToken;
-                    }
-                    //création de token pour l'encadrant et le chéf de département (BACK SOON!)
-                    else {
+                    } else if ($user->role_id == $roleEncadrant['nom']) {
+
+                        $role = $roleEncadrant['nom'];
+                        $token = $user->createToken($user->email . '_EncadrantToken', ['server:encadrant'])->plainTextToken;
+                    } else if ($user->role_id == $roleChefDepartement['nom']) {
+
+                        $role = $roleChefDepartement['nom'];
+                        $token = $user->createToken($user->email . '_ChefDepartementToken', ['server:chefdepartement'])->plainTextToken;
+                    } else {
+
                         $role = '';
                         $token = $user->createToken($user->email . '_Token', [''])->plainTextToken;
                     }
