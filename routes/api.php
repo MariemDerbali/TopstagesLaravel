@@ -11,6 +11,7 @@ use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\StagiaireController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\OffreStageController;
 
 
 /*
@@ -39,6 +40,8 @@ Route::post('/login-stagiaire', [AuthController::class, 'StagiaireLogin'])->midd
 Route::post('/stagiaire-forgot-password', [AuthController::class, 'Stagiaireforgotpassword']);
 //Route pour réinitialiser le mot de passe oublié 
 Route::post('/stagiaire-reset-forgottenpassword', [AuthController::class, 'Stagiaireresetforgottenpassword']);
+
+Route::get('/getoffres', [OffreStageController::class, 'getOffres']);
 
 //-------------Pour Topnet
 //Route pour s'authentifier 
@@ -118,6 +121,13 @@ Route::group(['middleware' => ['auth:sanctum', 'isEncadrant']], function () {
     Route::get('/checkingEncadrant', function () {
         return response()->json(['message' => 'Vous êtes encadrant', 'status' => 200], 200);
     });
+    //Route pour créer une offre
+    Route::post('/offres', [OffreStageController::class, 'store']);
+    //Route pour consulter les offres de stage
+    Route::get('/offres', [OffreStageController::class, 'index']);
+    //Route pour modifier une offre
+    Route::post('/offres/{id}', [OffreStageController::class, 'update']);
+    Route::get('/edit-offre/{id}', [OffreStageController::class, 'edit']);
 });
 
 //--------------------------Routes privés pour le Chef département-----------------------------------
