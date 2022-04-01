@@ -12,6 +12,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\StagiaireController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\OffreStageController;
+use App\Http\Controllers\TestPsychotechniqueController;
 
 
 /*
@@ -41,7 +42,16 @@ Route::post('/stagiaire-forgot-password', [AuthController::class, 'Stagiaireforg
 //Route pour réinitialiser le mot de passe oublié 
 Route::post('/stagiaire-reset-forgottenpassword', [AuthController::class, 'Stagiaireresetforgottenpassword']);
 
+
+//Route pour obtenir la liste des départements(domaines de stage) (interface offres de stage)
+Route::get('/departements', [UserController::class, 'GetDepartements']);
+//Route pour obtenir les offres
 Route::get('/getoffres', [OffreStageController::class, 'getOffres']);
+
+
+//Route pour obtenir les questions facile et les réponses du test psychotechnique
+Route::get('/getquestionsreponses', [TestPsychotechniqueController::class, 'indexQuestionsFacile']);
+
 
 //-------------Pour Topnet
 //Route pour s'authentifier 
@@ -72,8 +82,6 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
     Route::post('/users', [UserController::class, 'store']);
     //Route pour obtenir la liste des rôles
     Route::get('/roles', [UserController::class, 'GetRoles']);
-    //Route pour obtenir la liste des départements
-    Route::get('/departements', [UserController::class, 'GetDepartements']);
 });
 
 
