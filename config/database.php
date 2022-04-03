@@ -44,7 +44,7 @@ return [
         ],
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => env('DB_URI', 'mongodb+srv://mariem:snyxLRlb1HggMJkQ@cluster0.y7yrs.mongodb.net/topstages?retryWrites=true&w=majority'),
+            'dsn' => env('DB_URI', 'mongodb+srv://mariem:LG2xzZVX9toJ5t2b@cluster0.y7yrs.mongodb.net/topstages?retryWrites=true&w=majority'),
             'database' => 'topstages',
         ],
         'mysql' => [

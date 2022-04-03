@@ -15,7 +15,7 @@ class OffreStageController extends Controller
      */
     public function index()
     {
-        //obtenir la liste de toutes les offres de stage
+        //obtenir la liste de toutes les offres de stage pour l'encadrant
         $offres = OffreStage::all();
 
         return response()->json([
@@ -25,8 +25,8 @@ class OffreStageController extends Controller
     }
     public function getOffres()
     {
-        //obtenir la liste de toutes les offres de stage
-        $offres = OffreStage::all();
+        //obtenir la liste de toutes les offres de stage pour le stagiaire
+        $offres = OffreStage::where([['etatoffre', '!=', 'inactive'], ['etatpartage', '!=', 'unpublished']])->get();
 
         return response()->json([
             'status' => 200,

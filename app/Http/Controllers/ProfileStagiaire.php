@@ -61,7 +61,7 @@ class ProfileStagiaire extends Controller
      */
     public function edit($id)
     { //Afficher le formulaire de modification de profil pour le stagiaire
-        $user = $this->showStagiaire($id);
+        $user = $this->show($id);
         if ($user) {
             return response()->json([
                 'status' => 200,

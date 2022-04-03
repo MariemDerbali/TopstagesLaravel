@@ -20,19 +20,21 @@ class TestPsychotechniqueController extends Controller
         //baaed nzidou fazet random lena
         $questions = Question::where('niveau', 'Facile')->get();
 
-        $reponses = [];
+        $questionsreponses = [];
+
         foreach ($questions as $question) {
-            $reponses = array_merge($reponses, array(Reponse::where('questionID', $question->_id)->get()));
+            $questionsreponses[] = [
+                'question' => $question,
+                'reponses' => Reponse::where('questionID', $question->_id)->get()
+
+            ];
         };
-
-
-
 
         if ($questions) {
             return response()->json([
                 'status' => 200,
-                'questions' => $questions,
-                'reponses' => $reponses
+                'questionsreponses' => $questionsreponses
+
             ]);
         } else {
             return response()->json([
@@ -47,15 +49,20 @@ class TestPsychotechniqueController extends Controller
         //baaed nzidou fazet random lena
         $questions = Question::where('niveau', 'Moyenne')->get();
 
+        $questionsreponses = [];
+
         foreach ($questions as $question) {
-            $reponses = Reponse::where('questionID', $question->_id)->get();
-        }
+            $questionsreponses[] = [
+                'question' => $question,
+                'reponses' => Reponse::where('questionID', $question->_id)->get()
+
+            ];
+        };
 
         if ($questions) {
             return response()->json([
                 'status' => 200,
-                'questions' => $questions,
-                'reponses' => $reponses
+                'questionsreponses' => $questionsreponses
 
             ]);
         } else {
@@ -71,15 +78,20 @@ class TestPsychotechniqueController extends Controller
         //baaed nzidou fazet random lena
         $questions = Question::where('niveau', 'Difficile')->get();
 
+        $questionsreponses = [];
+
         foreach ($questions as $question) {
-            $reponses = Reponse::where('questionID', $question->_id)->get();
-        }
+            $questionsreponses[] = [
+                'question' => $question,
+                'reponses' => Reponse::where('questionID', $question->_id)->get()
+
+            ];
+        };
 
         if ($questions) {
             return response()->json([
                 'status' => 200,
-                'questions' => $questions,
-                'reponses' => $reponses
+                'questionsreponses' => $questionsreponses
 
             ]);
         } else {

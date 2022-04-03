@@ -54,7 +54,7 @@ class AuthController extends Controller
             //Ce token est ensuite utilisé pour chaque requête.
             $roleCordi = '';
             //création de Token pour le stagiaire 
-            $token = $user->createToken($user->email . '_Token', [''])->plainTextToken;
+            $token = $user->createToken($user->email . '_StagiaireToken', ['server:stagiaire'])->plainTextToken;
             return response()->json([
                 'status' => 200,
                 'username' => $user->nom,

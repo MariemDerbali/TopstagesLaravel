@@ -168,10 +168,6 @@ Route::group(['middleware' => ['auth:sanctum', 'isStagiaire']], function () {
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-    /* Route::get('/checkingAuthenticated', function () {
-        return response()->json(['message' => 'You are in', 'status' => 200], 200);
-    });*/
-
     //Route pour obtenir l'utilisateur actuellement connecté
     Route::get('/currentuser', [AuthController::class, 'getCurrentUser']);
     //Route pour mettre à jour le profil
