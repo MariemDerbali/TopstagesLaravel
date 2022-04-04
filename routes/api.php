@@ -9,6 +9,7 @@ use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\OffreStageController;
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ProfileTopnetController;
 use App\Http\Controllers\ChefDepartementController;
 use App\Http\Controllers\ProfileStagiaireController;

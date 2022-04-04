@@ -26,16 +26,6 @@ class OffreStageController extends Controller
             'offres' => $offres,
         ]);
     }
-    public function getOffres()
-    {
-        //obtenir la liste de toutes les offres de stage pour le stagiaire
-        $offres = OffreStage::where([['etatoffre', '!=', 'inactive'], ['etatpartage', '!=', 'unpublished']])->get();
-
-        return response()->json([
-            'status' => 200,
-            'offres' => $offres,
-        ]);
-    }
 
     /**
      * Show the form for creating a new resource.
