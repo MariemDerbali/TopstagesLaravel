@@ -3,24 +3,64 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stagiaire;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
-class ProfileController extends Controller
+class ProfileStagiaireController extends Controller
 {
-    public function show($id)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        //Afficher un utilisateur par son id
-        return User::where('_id', $id)->first();
+        //
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
 
-    public function editProfil($id)
-    { //Afficher le formulaire de modification de profil pour tous les utilisateur sauf le stagiaire
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //Afficher un stagiaire par son id
+        return Stagiaire::where('_id', $id)->first();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    { //Afficher le formulaire de modification de profil pour le stagiaire
         $user = $this->show($id);
         if ($user) {
             return response()->json([
@@ -35,17 +75,22 @@ class ProfileController extends Controller
         }
     }
 
-
-
-    public function updateProfil(Request $request, $id)
-    { //Mettre à jour le profil de l'utilisateur pour tous les utilisateur sauf le stagiaire
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    { //Mettre à jour le profil de stagiaire
         $validator = Validator::make($request->all(), [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
             'adresse' => 'required',
             'role_id' => 'required',
-            'departement' => 'required',
+            'cinpasseport' => 'required',
             'description' => 'required',
 
         ]);
@@ -57,7 +102,7 @@ class ProfileController extends Controller
             ]);
         } else {
 
-            $user = User::find($id);
+            $user = Stagiaire::find($id);
             if ($user) {
 
                 $user->adresse = $request->input('adresse');
@@ -66,6 +111,8 @@ class ProfileController extends Controller
                 $user->tel = $request->input('tel');
                 $user->description = $request->input('description');
                 $user->email = $request->input('email');
+                $user->cinpasseport = $request->input('cinpasseport');
+
 
                 if ($request->hasFile('image')) {
                     $path = $user->image;
@@ -93,5 +140,16 @@ class ProfileController extends Controller
                 ]);
             }
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
 }

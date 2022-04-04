@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\OffreStage;
+use Illuminate\Support\Facades\DB;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,9 +17,10 @@ class OffreStageController extends Controller
      */
     public function index()
     {
-        //obtenir la liste de toutes les offres de stage pour l'encadrant
-        $offres = OffreStage::all();
+        //obtenir la liste des offres de stage pour l'encadrant et chef département
+        $mondepartement = auth()->user()->departement;
 
+        $offres = DB::collection('offre_stages')->where('domaine', $mondepartement)->get();
         return response()->json([
             'status' => 200,
             'offres' => $offres,
@@ -72,7 +75,9 @@ class OffreStageController extends Controller
             $offre->periode = $request->input('periode');
             $offre->technologies = $request->input('technologies');
             $offre->type = $request->input('type');
+
             $offre->domaine = $request->input('domaine');
+
             $offre->description = $request->input('description');
             $offre->etatoffre = 'active';
             $offre->etatpartage = 'unpublished';
