@@ -25,7 +25,8 @@ class TestPsychotechniqueController extends Controller
         foreach ($questions as $question) {
             $questionsreponses[] = [
                 'question' => $question,
-                'reponses' => Reponse::where('questionID', $question->_id)->get()
+                'reponses' => Reponse::where('questionID', $question->_id)->get(),
+                'reponsecorrecte' => DB::collection('reponses')->where('questionID', $question->_id)->where('reponseCorrecte', 'Oui')->get()
 
             ];
         };
