@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\OffreStage;
-use Illuminate\Support\Str;
+use App\Models\Testpsychotechnique;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PublicController extends Controller
 {
@@ -30,5 +31,34 @@ class PublicController extends Controller
             'offres' => $offres,
 
         ]);
+    }
+
+    public function postOffreDemandee(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'type' => 'required',
+            'domaine' => 'required',
+            'stagiaireID' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages(),
+            ]);
+        } else {
+            $offredemande = new Testpsychotechnique;
+            $offredemande->domaine = $request->input('domaine');
+            $offredemande->type = $request->input('type');
+
+            $offredemande->stagiaireID = $request->stagiaireID;
+
+            $offredemande->save();
+
+            return response()->json([
+                'status' => 200,
+                'offredemande' => $offredemande
+            ]);
+        }
     }
 }

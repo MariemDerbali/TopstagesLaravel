@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Reponse;
 use App\Models\Question;
 use App\Models\Stagiaire;
+use App\Models\Testpsychotechnique;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class TestPsychotechniqueController extends Controller
@@ -16,28 +19,64 @@ class TestPsychotechniqueController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function indexQuestionsFacile()
+    public function indexQuestionsReponses(Request $request)
     {
-        //baaed nzidou fazet random lena
-        $questions = Question::where('niveau', 'Facile')->get();
 
-        $questionsreponses = [];
+        $domaine = Testpsychotechnique::get()->last()->domaine;
+        $type = Testpsychotechnique::get()->last()->type;
 
-        foreach ($questions as $question) {
-            $questionsreponses[] = [
-                'question' => $question,
-                'reponses' => Reponse::where('questionID', $question->_id)->get(),
-                'reponsecorrecte' => DB::collection('reponses')->where('questionID', $question->_id)->where('reponseCorrecte', 'Oui')->get()
+        $RandomQuestions = [];
 
-            ];
-        };
+        if ($domaine === "DSI" && $type === "Stage PFE") {
+            $randomQuestionsFacile = Question::take(1)->skip(rand(0, 3))->where('niveau', 'Facile')->get();
+
+            foreach ($randomQuestionsFacile as $qf) {
+                $RandomQuestions[] = [
+                    'question' => $qf,
+                    'reponses' => Reponse::where('questionID', $qf->_id)->get(),
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qf->_id)->where('reponseCorrecte', 'Oui')->get()
+
+                ];
+            }
+            $randomQuestionsMoyenne = Question::take(1)->skip(rand(0, 3))->where('niveau', 'Moyenne')->get();
+
+            foreach ($randomQuestionsMoyenne as $qm) {
+                $RandomQuestions[] = [
+                    'question' => $qm,
+                    'reponses' => Reponse::where('questionID', $qm->_id)->get(),
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qm->_id)->where('reponseCorrecte', 'Oui')->get()
+
+                ];
+            }
+
+            $randomQuestionsDifficile = Question::take(2)->skip(rand(0, 3))->where('niveau', 'difficile')->get();
+            foreach ($randomQuestionsDifficile as $qd) {
+                $RandomQuestions[] = [
+                    'question' => $qd,
+                    'reponses' => Reponse::where('questionID', $qd->_id)->get(),
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qd->_id)->where('reponseCorrecte', 'Oui')->get()
+
+                ];
+            }
+        } else if ($domaine === "DSI" && $type === "Stage Perfectionnement") {
+            //$randomQuestionsFacile=Question::where('niveau', 'Facile')->random(2)->get();
+            // $randomQuestionsMoyenne=Question::where('niveau', 'Moyenne')->random(6)->get();
+            //$randomQuestionsDifficile=Question::where('niveau', 'Difficile')->random(4)->get();
+
+        } else if ($domaine === "DSI" && $type === "Stage initiaion") {
+            //  $randomQuestionsFacile=Question::where('niveau', 'Facile')->random(6)->get();
+            // $randomQuestionsMoyenne=Question::where('niveau', 'Moyenne')->random(4)->get();
+            // $randomQuestionsDifficile=Question::where('niveau', 'Difficile')->random(2)->get();
+        }
+
+
         $id = auth()->user()->_id;
         $stagiaire = Stagiaire::find($id);
 
-        if ($questions && $stagiaire) {
+        if ($RandomQuestions && $stagiaire) {
             return response()->json([
                 'status' => 200,
-                'questionsreponses' => $questionsreponses,
+                'questionsreponses' => $RandomQuestions,
                 'stagiaire' => $stagiaire
 
             ]);
@@ -49,63 +88,7 @@ class TestPsychotechniqueController extends Controller
         }
     }
 
-    public function indexQuestionsMoyenne()
-    {
-        //baaed nzidou fazet random lena
-        $questions = Question::where('niveau', 'Moyenne')->get();
 
-        $questionsreponses = [];
-
-        foreach ($questions as $question) {
-            $questionsreponses[] = [
-                'question' => $question,
-                'reponses' => Reponse::where('questionID', $question->_id)->get()
-
-            ];
-        };
-
-        if ($questions) {
-            return response()->json([
-                'status' => 200,
-                'questionsreponses' => $questionsreponses
-
-            ]);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Pas de questions trouvées'
-            ]);
-        }
-    }
-
-    public function indexQuestionsDifficile()
-    {
-        //baaed nzidou fazet random lena
-        $questions = Question::where('niveau', 'Difficile')->get();
-
-        $questionsreponses = [];
-
-        foreach ($questions as $question) {
-            $questionsreponses[] = [
-                'question' => $question,
-                'reponses' => Reponse::where('questionID', $question->_id)->get()
-
-            ];
-        };
-
-        if ($questions) {
-            return response()->json([
-                'status' => 200,
-                'questionsreponses' => $questionsreponses
-
-            ]);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Pas de questions trouvées'
-            ]);
-        }
-    }
 
 
 

@@ -63,6 +63,10 @@ Route::get('/homepage-departements', [PublicController::class, 'GetDepartements'
 //Route pour obtenir les offres 
 Route::get('/homepage-getoffres', [PublicController::class, 'getOffres']);
 
+//Route pour postuler l'offre demandée
+Route::post('/homepage-postuler', [PublicController::class, 'postOffreDemandee']);
+
+
 
 //--------------------------Routes privés pour le Coordinateur-----------------------------------
 
@@ -161,7 +165,7 @@ Route::group(['middleware' => ['auth:sanctum', 'isStagiaire']], function () {
     Route::post('/profil-stagiaire/{id}', [ProfileStagiaireController::class, 'update']);
 
     //Route pour obtenir les questions facile et les réponses du test psychotechnique
-    Route::get('/getquestionsreponses', [TestPsychotechniqueController::class, 'indexQuestionsFacile']);
+    Route::get('/getquestionsreponses', [TestPsychotechniqueController::class, 'indexQuestionsReponses']);
 });
 
 
