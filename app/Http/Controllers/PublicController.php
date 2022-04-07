@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OffreStage;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,12 +21,14 @@ class PublicController extends Controller
 
     public function getOffres()
     {
+
         //obtenir la liste de toutes les offres de stage pour le stagiaire
         $offres = OffreStage::where([['etatoffre', '!=', 'inactive'], ['etatpartage', '!=', 'unpublished']])->get();
 
         return response()->json([
             'status' => 200,
             'offres' => $offres,
+
         ]);
     }
 }

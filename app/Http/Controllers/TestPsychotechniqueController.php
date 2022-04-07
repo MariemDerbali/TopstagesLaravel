@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Question;
 use App\Models\Reponse;
+use App\Models\Question;
+use App\Models\Stagiaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -30,17 +31,20 @@ class TestPsychotechniqueController extends Controller
 
             ];
         };
+        $id = auth()->user()->_id;
+        $stagiaire = Stagiaire::find($id);
 
-        if ($questions) {
+        if ($questions && $stagiaire) {
             return response()->json([
                 'status' => 200,
-                'questionsreponses' => $questionsreponses
+                'questionsreponses' => $questionsreponses,
+                'stagiaire' => $stagiaire
 
             ]);
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'Pas de questions trouvées'
+                'message' => 'Pas de questions trouvées ou stagiaire'
             ]);
         }
     }
