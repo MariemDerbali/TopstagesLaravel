@@ -24,42 +24,50 @@ class TestPsychotechniqueController extends Controller
 
         $domaine = Testpsychotechnique::get()->last()->domaine;
         $type = Testpsychotechnique::get()->last()->type;
+        $duree = 0;
 
         $RandomQuestions = [];
 
         if ($domaine === "DSI" && $type === "Stage PFE") {
-            $randomQuestionsFacile = Question::take(1)->skip(rand(0, 3))->where('niveau', 'Facile')->get();
+            $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random(2);
 
             foreach ($randomQuestionsFacile as $qf) {
+                $duree = $duree + $qf->duree;
+
                 $RandomQuestions[] = [
                     'question' => $qf,
                     'reponses' => Reponse::where('questionID', $qf->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qf->_id)->where('reponseCorrecte', 'Oui')->get()
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qf->_id)->where('reponseCorrecte', 'Oui')->get(),
+
 
                 ];
             }
-            $randomQuestionsMoyenne = Question::take(1)->skip(rand(0, 3))->where('niveau', 'Moyenne')->get();
+            $randomQuestionsMoyenne = Question::where('niveau', 'Moyenne')->get()->random(2);
 
             foreach ($randomQuestionsMoyenne as $qm) {
+                $duree = $duree + $qm->duree;
+
                 $RandomQuestions[] = [
                     'question' => $qm,
                     'reponses' => Reponse::where('questionID', $qm->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qm->_id)->where('reponseCorrecte', 'Oui')->get()
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qm->_id)->where('reponseCorrecte', 'Oui')->get(),
 
                 ];
             }
 
-            $randomQuestionsDifficile = Question::take(2)->skip(rand(0, 3))->where('niveau', 'difficile')->get();
+            $randomQuestionsDifficile = Question::where('niveau', 'difficile')->get()->random(2);
             foreach ($randomQuestionsDifficile as $qd) {
+                $duree = $duree + $qd->duree;
                 $RandomQuestions[] = [
                     'question' => $qd,
                     'reponses' => Reponse::where('questionID', $qd->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qd->_id)->where('reponseCorrecte', 'Oui')->get()
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qd->_id)->where('reponseCorrecte', 'Oui')->get(),
+
 
                 ];
             }
         } else if ($domaine === "DSI" && $type === "Stage Perfectionnement") {
-            $randomQuestionsFacile = Question::take(2)->skip(rand(0, 3))->where('niveau', 'Facile')->get();
+            $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random(2);
 
             foreach ($randomQuestionsFacile as $qf) {
                 $RandomQuestions[] = [
@@ -69,7 +77,7 @@ class TestPsychotechniqueController extends Controller
 
                 ];
             }
-            $randomQuestionsMoyenne = Question::take(2)->skip(rand(0, 3))->where('niveau', 'Moyenne')->get();
+            $randomQuestionsMoyenne = Question::where('niveau', 'Moyenne')->get()->random(2);
 
             foreach ($randomQuestionsMoyenne as $qm) {
                 $RandomQuestions[] = [
@@ -80,7 +88,7 @@ class TestPsychotechniqueController extends Controller
                 ];
             }
 
-            $randomQuestionsDifficile = Question::take(2)->skip(rand(0, 3))->where('niveau', 'difficile')->get();
+            $randomQuestionsDifficile = Question::where('niveau', 'difficile')->get()->random(2);
             foreach ($randomQuestionsDifficile as $qd) {
                 $RandomQuestions[] = [
                     'question' => $qd,
@@ -90,7 +98,7 @@ class TestPsychotechniqueController extends Controller
                 ];
             }
         } else if ($domaine === "DSI" && $type === "Stage initiaion") {
-            $randomQuestionsFacile = Question::take(2)->skip(rand(0, 3))->where('niveau', 'Facile')->get();
+            $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random(2);
 
             foreach ($randomQuestionsFacile as $qf) {
                 $RandomQuestions[] = [
@@ -100,7 +108,7 @@ class TestPsychotechniqueController extends Controller
 
                 ];
             }
-            $randomQuestionsMoyenne = Question::take(2)->skip(rand(0, 3))->where('niveau', 'Moyenne')->get();
+            $randomQuestionsMoyenne = Question::where('niveau', 'Moyenne')->get()->random(2);
 
             foreach ($randomQuestionsMoyenne as $qm) {
                 $RandomQuestions[] = [
@@ -111,7 +119,7 @@ class TestPsychotechniqueController extends Controller
                 ];
             }
 
-            $randomQuestionsDifficile = Question::take(2)->skip(rand(0, 3))->where('niveau', 'difficile')->get();
+            $randomQuestionsDifficile = Question::where('niveau', 'difficile')->get()->random(2);
             foreach ($randomQuestionsDifficile as $qd) {
                 $RandomQuestions[] = [
                     'question' => $qd,
@@ -130,6 +138,7 @@ class TestPsychotechniqueController extends Controller
             return response()->json([
                 'status' => 200,
                 'questionsreponses' => $RandomQuestions,
+                'duree' => $duree,
                 'stagiaire' => $stagiaire
 
             ]);
