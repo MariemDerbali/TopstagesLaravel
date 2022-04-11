@@ -45,6 +45,7 @@ class PublicController extends Controller
             return response()->json([
                 'status' => 422,
                 'errors' => $validator->messages(),
+                'message' => 'Veuillez choisir le domaine et le type de stage'
             ]);
         } else {
             $offredemande = new Testpsychotechnique;
