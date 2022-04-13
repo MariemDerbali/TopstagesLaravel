@@ -25,7 +25,6 @@ class User extends Authenticatable
     protected $fillable = [
         'nom',
         'prenom',
-        'description',
         'matricule',
         'loginTOPNET',
         'role_id',
@@ -33,10 +32,10 @@ class User extends Authenticatable
         'departement',
         'tel',
         'image',
-        'cinpasseport',
         'etat',
         'email',
         'password',
+        'first_time_login'
     ];
 
     /**

@@ -46,7 +46,6 @@ class ProfileTopnetController extends Controller
             'adresse' => 'required',
             'role_id' => 'required',
             'departement' => 'required',
-            'description' => 'required',
 
         ]);
 
@@ -64,7 +63,6 @@ class ProfileTopnetController extends Controller
                 $user->nom = $request->input('nom');
                 $user->prenom = $request->input('prenom');
                 $user->tel = $request->input('tel');
-                $user->description = $request->input('description');
                 $user->email = $request->input('email');
 
                 if ($request->hasFile('image')) {

@@ -47,6 +47,7 @@ class DepartmentController extends Controller
         //création des départements
         $validator = Validator::make($request->all(), [
             'nomdep' => ['required', 'string', 'max:255'],
+            'nomdirection' => ['required', 'string', 'max:255'],
             'chefdep' => ['required', 'string', 'max:255']
         ]);
         if ($validator->fails()) {
@@ -57,6 +58,7 @@ class DepartmentController extends Controller
         } else {
             $dep = new Department;
             $dep->nomdep = $request->input('nomdep');
+            $dep->nomdirection = $request->input('nomdirection');
             $dep->chefdep = $request->input('chefdep');
             $dep->etat = 'active';
             $dep->save();
@@ -115,6 +117,7 @@ class DepartmentController extends Controller
         //Mettre à jour un département
         $validator = Validator::make($request->all(), [
             'nomdep' => ['required', 'string', 'max:255'],
+            'nomdirection' => ['required', 'string', 'max:255'],
             'chefdep' => ['required', 'string', 'max:255']
         ]);
         if ($validator->fails()) {
@@ -128,6 +131,7 @@ class DepartmentController extends Controller
             if ($dep) {
 
                 $dep->nomdep = $request->input('nomdep');
+                $dep->nomdirection = $request->input('nomdirection');
                 $dep->chefdep = $request->input('chefdep');
                 $dep->etat = $request->input('etat');
                 $dep->update();

@@ -18,11 +18,11 @@ class CreateUsersTable extends Migration
             $table->unique('matricule');
             $table->string('nom');
             $table->string('prenom');
-            $table->string('description');
             $table->string('role_id');
             $table->string('adresse');
             $table->string('tel');
             $table->string('image');
+            $table->string('departement');
             $table->unique('loginTOPNET');
             $table->string('etat');
             $table->string('first_time_login');
