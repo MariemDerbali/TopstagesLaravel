@@ -82,6 +82,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
     //Routes pour modifier l'utilisateur
     Route::post('/users/{id}', [UserController::class, 'update']);
     Route::get('/edit-user/{id}', [UserController::class, 'edit']);
+    //Route pour activer/désactiver utilisateur
+    Route::put('/desactiver-user/{id}', [UserController::class, 'desactiverUser']);
     //Route pour créer l'utilisateur
     Route::post('/users', [UserController::class, 'store']);
     //Route pour obtenir la liste des rôles
@@ -114,14 +116,16 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::post('/questions', [QuestionController::class, 'store']);
     //Route pour consulter les questions
     Route::get('/questions', [QuestionController::class, 'index']);
+    //Route pour activer/désactiver une question
+    Route::put('/desactiver-question/{id}', [QuestionController::class, 'desactiverQuestion']);
     //Route pour modifier une question
     Route::post('/questions/{id}', [QuestionController::class, 'update']);
     Route::get('/edit-question/{id}', [QuestionController::class, 'edit']);
 
     //Route pour obtenir la liste des réponses de la question spécifié par son id
     Route::get('/reponses/{id}', [QuestionController::class, 'GetReponses']);
-    //Route pour supprimer une réponses
-    Route::delete('/delete-reponse/{id}', [ReponseController::class, 'destroy']);
+    //Route pour activer/désactiver une réponses
+    Route::put('/desactiver-reponse/{id}', [ReponseController::class, 'desactiverReponse']);
     //Route pour créer une réponse
     Route::post('/reponses', [ReponseController::class, 'store']);
     //Routes pour modifier une réponse
@@ -189,6 +193,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Route pour créer une offre
     Route::post('/offres', [OffreStageController::class, 'store']);
+    //Route pour activer/désactiver une offre
+    Route::put('/desactiver-offre/{id}', [OffreStageController::class, 'desactiverOffre']);
+    //Route pour publier une offre
+    Route::put('/publier-offre/{id}', [OffreStageController::class, 'publierOffre']);
     //Route pour consulter les offres de stage
     Route::get('/offres', [OffreStageController::class, 'index']);
     //Route pour modifier une offre

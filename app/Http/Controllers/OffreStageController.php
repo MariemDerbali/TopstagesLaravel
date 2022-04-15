@@ -175,4 +175,58 @@ class OffreStageController extends Controller
     {
         //
     }
+
+    public function desactiverOffre($id)
+    {
+        $offre  = OffreStage::find($id);
+        if ($offre) {
+            if ($offre->etatoffre == 'active') {
+                $offre->etatoffre = 'inactive';
+                $offre->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Offre est désactivée'
+                ]);
+            } else {
+                $offre->etatoffre = 'active';
+                $offre->save();
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'Offre est activée'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Offre non trouvée"
+            ]);
+        }
+    }
+
+    public function publierOffre($id)
+    {
+        $offre  = OffreStage::find($id);
+        if ($offre) {
+            if ($offre->etatpartage == 'unpublished') {
+                $offre->etatpartage = 'published';
+                $offre->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Offre est publiée'
+                ]);
+            } else {
+                $offre->etatpartage = 'unpublished';
+                $offre->save();
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'La publication est annulée'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Offre non trouvée"
+            ]);
+        }
+    }
 }

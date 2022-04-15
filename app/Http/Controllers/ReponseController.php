@@ -193,27 +193,31 @@ class ReponseController extends Controller
      */
     public function destroy($id)
     {
-        //Pour supprimer la réponse
-        $reponse = Reponse::find($id);
-        if ($reponse) {
+    }
 
-            $reponsedeleted = $reponse->delete();
-
-            if ($reponsedeleted) {
+    public function desactiverReponse($id)
+    {
+        $rep  = Reponse::find($id);
+        if ($rep) {
+            if ($rep->etat == 'active') {
+                $rep->etat = 'inactive';
+                $rep->save();
                 return response()->json([
                     'status' => 200,
-                    'message' => 'réponse supprimée avec succès'
+                    'message' => 'Réponse est désactivée'
                 ]);
             } else {
+                $rep->etat = 'active';
+                $rep->save();
                 return response()->json([
-                    'status' => 401,
-                    'message' => "réponse n'a pas supprimée"
+                    'status' => 201,
+                    'message' => 'Réponse est activée'
                 ]);
             }
         } else {
             return response()->json([
-                'status' => 404,
-                'message' => 'Aucune réponse trouvée'
+                'status' => 401,
+                'message' => "réponse non trouvée"
             ]);
         }
     }

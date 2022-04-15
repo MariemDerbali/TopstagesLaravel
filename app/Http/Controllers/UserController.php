@@ -240,4 +240,31 @@ class UserController extends Controller
             'deps' => $deps
         ]);
     }
+
+    public function desactiverUser($id)
+    {
+        $user  = User::find($id);
+        if ($user) {
+            if ($user->etat == 'active') {
+                $user->etat = 'inactive';
+                $user->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Compte utilisateur est désactivé'
+                ]);
+            } else {
+                $user->etat = 'active';
+                $user->save();
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'Compte utilisateur est activé'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Utilisateur non trouvé"
+            ]);
+        }
+    }
 }

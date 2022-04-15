@@ -210,4 +210,32 @@ class QuestionController extends Controller
             'reponses' => $reponses
         ]);
     }
+
+
+    public function desactiverQuestion($id)
+    {
+        $question  = Question::find($id);
+        if ($question) {
+            if ($question->etat == 'active') {
+                $question->etat = 'inactive';
+                $question->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Question est désactivée'
+                ]);
+            } else {
+                $question->etat = 'active';
+                $question->save();
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'Question est activée'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Question non trouvée"
+            ]);
+        }
+    }
 }

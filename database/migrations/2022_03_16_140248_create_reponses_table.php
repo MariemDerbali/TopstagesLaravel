@@ -18,6 +18,7 @@ class CreateReponsesTable extends Migration
             $table->string('reponseText');
             $table->string('reponseImage');
             $table->string('reponseCorrecte');
+            $table->string('etat');
             $table->string('questionID');
             $table->timestamps();
         });
