@@ -57,6 +57,7 @@ class UserController extends Controller
             'adresse' => 'required',
             'role_id' => 'required',
             'departement' => 'required',
+            'direction' => 'required',
             'loginTOPNET' => ['required', 'string', 'unique:users'],
             'email' => ['required', 'string', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'max:25'],
@@ -71,11 +72,10 @@ class UserController extends Controller
             ]);
         } else {
             $user = new User;
-            $roleSelected = DB::collection('roles')->where('nom', $request->input('role_id'))->first();
-            $depSelected = DB::collection('departments')->where('nomdep', $request->input('departement'))->first();
 
-            $user->role_id = $roleSelected['nom'];
-            $user->departement = $depSelected['nomdep'];
+            $user->role_id = $request->input('role_id');
+            $user->departement = $request->input('departement');
+            $user->direction = $request->input('direction');
 
             $user->matricule = $request->input('matricule');
             $user->adresse = $request->input('adresse');
@@ -166,11 +166,10 @@ class UserController extends Controller
 
             $user = User::find($id);
             if ($user) {
-                $roleSelected = DB::collection('roles')->where('nom', $request->input('role_id'))->first();
-                $depSelected = DB::collection('departments')->where('nomdep', $request->input('departement'))->first();
 
-                $user->role_id = $roleSelected['nom'];
-                $user->departement = $depSelected['nomdep'];
+                $user->role_id = $request->input('role_id');
+                $user->departement = $request->input('departement');
+                $user->direction = $request->input('direction');
 
                 $user->matricule = $request->input('matricule');
                 $user->adresse = $request->input('adresse');
@@ -193,7 +192,6 @@ class UserController extends Controller
                     $user->image = 'img/user/' . $filename;
                 }
 
-                $user->etat = $request->input('etat');
                 $user->update();
 
                 return response()->json([

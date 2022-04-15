@@ -5,11 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PublicController;
+use App\Http\Controllers\CritereController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\OffreStageController;
-use App\Http\Controllers\PublicController;
 use App\Http\Controllers\ProfileTopnetController;
 use App\Http\Controllers\ChefDepartementController;
 use App\Http\Controllers\ProfileStagiaireController;
@@ -103,14 +104,19 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
         return response()->json(['message' => 'Vous êtes service formation', 'status' => 200], 200);
     });
 
+    /*-------------DEPARTEMENT-------------*/
 
     //Route pour créer un département
     Route::post('/departments', [DepartmentController::class, 'store']);
     //Route pour consulter les départements
     Route::get('/departments', [DepartmentController::class, 'index']);
+    //Route pour activer/désactiver un département
+    Route::put('/desactiver-departement/{id}', [DepartmentController::class, 'desactiverDepartement']);
     //Route pour modifier un département
     Route::post('/departments/{id}', [DepartmentController::class, 'update']);
     Route::get('/edit-department/{id}', [DepartmentController::class, 'edit']);
+
+    /*-------------QUESTION-------------*/
 
     //Route pour créer une question
     Route::post('/questions', [QuestionController::class, 'store']);
@@ -122,6 +128,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::post('/questions/{id}', [QuestionController::class, 'update']);
     Route::get('/edit-question/{id}', [QuestionController::class, 'edit']);
 
+    /*-------------REPONSE-------------*/
+
     //Route pour obtenir la liste des réponses de la question spécifié par son id
     Route::get('/reponses/{id}', [QuestionController::class, 'GetReponses']);
     //Route pour activer/désactiver une réponses
@@ -131,6 +139,20 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     //Routes pour modifier une réponse
     Route::post('/reponses/{id}', [ReponseController::class, 'update']);
     Route::get('/edit-reponse/{id}', [ReponseController::class, 'edit']);
+
+    /*-------------CRITERE-------------*/
+
+    //Route pour consulter la liste des critères
+    Route::get('/criteres', [CritereController::class, 'index']);
+    //Route pour obtenir les direcions
+    Route::get('/directions', [CritereController::class, 'getDirections']);
+    //Route pour activer/désactiver un critère  
+    Route::put('/desactiver-critere/{id}', [CritereController::class, 'desactiverCritere']);
+    //Route pour créer un critere
+    Route::post('/criteres', [CritereController::class, 'store']);
+    //Routes pour modifier un critere
+    Route::post('/criteres/{id}', [CritereController::class, 'update']);
+    Route::get('/edit-critere/{id}', [CritereController::class, 'edit']);
 });
 
 //--------------------------Routes privés pour l'Encadrant-----------------------------------

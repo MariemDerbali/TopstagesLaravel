@@ -133,7 +133,6 @@ class DepartmentController extends Controller
                 $dep->nomdep = $request->input('nomdep');
                 $dep->nomdirection = $request->input('nomdirection');
                 $dep->chefdep = $request->input('chefdep');
-                $dep->etat = $request->input('etat');
                 $dep->update();
 
                 return response()->json([
@@ -158,5 +157,32 @@ class DepartmentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function desactiverDepartement($id)
+    {
+        $dep  = Department::find($id);
+        if ($dep) {
+            if ($dep->etat == 'active') {
+                $dep->etat = 'inactive';
+                $dep->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Département est désactivé'
+                ]);
+            } else {
+                $dep->etat = 'active';
+                $dep->save();
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'Département est activé'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Département non trouvé"
+            ]);
+        }
     }
 }

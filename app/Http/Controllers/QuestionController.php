@@ -172,7 +172,6 @@ class QuestionController extends Controller
                     $question->questionImage = 'img/question/' . $filename;
                 }
 
-                $question->etat = $request->input('etat');
 
                 $question->update();
 

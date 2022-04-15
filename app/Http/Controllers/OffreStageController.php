@@ -18,9 +18,9 @@ class OffreStageController extends Controller
     public function index()
     {
         //obtenir la liste des offres de stage pour l'encadrant et chef département
-        $mondepartement = auth()->user()->departement;
+        $madirection = auth()->user()->direction;
 
-        $offres = DB::collection('offre_stages')->where('domaine', $mondepartement)->get();
+        $offres = DB::collection('offre_stages')->where('domaine', $madirection)->get();
         return response()->json([
             'status' => 200,
             'offres' => $offres,
@@ -148,8 +148,7 @@ class OffreStageController extends Controller
                 $offre->type = $request->input('type');
                 $offre->domaine = $request->input('domaine');
                 $offre->description = $request->input('description');
-                $offre->etatoffre = $request->input('etatoffre');
-                $offre->etatpartage = $request->input('etatpartage');
+
                 $offre->update();
 
                 return response()->json([
