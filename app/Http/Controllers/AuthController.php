@@ -39,15 +39,12 @@ class AuthController extends Controller
             ]);
         } else {
 
-            //enregistrement de l'utilisateur avec le rôle de stagiaire puisque seul le stagiaire peut s'inscrire
-            $role = DB::collection('roles')->where('nom', 'Stagiaire')->first();
             $user = Stagiaire::create([
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'cinpasseport' => $request->cinpasseport,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'role_id' => $role['nom']
             ]);
 
             //Pour sécuriser une API il faut une authentification des utilisateurs. Laravel en propose une par défaut. On assigne à chaque utilisateur inscrit un token aléatoire. 

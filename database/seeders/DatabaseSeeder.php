@@ -21,6 +21,5 @@ class DatabaseSeeder extends Seeder
         DB::collection('roles')->insert(['nom' => 'ChefDepartement']);
         DB::collection('roles')->insert(['nom' => 'ServiceFormation']);
         DB::collection('roles')->insert(['nom' => 'Coordinateur']);
-        DB::collection('roles')->insert(['nom' => 'Stagiaire']);
     }
 }

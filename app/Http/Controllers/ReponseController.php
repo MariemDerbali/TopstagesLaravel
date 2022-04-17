@@ -85,6 +85,7 @@ class ReponseController extends Controller
                     $reponse->reponseImage = 'img/reponse/' . $filename;
                 }
 
+                $reponse->etat = 'active';
                 $reponse->save();
 
 

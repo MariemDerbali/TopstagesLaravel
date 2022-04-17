@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('tel');
             $table->string('image');
             $table->string('departement');
+            $table->string('direction');
             $table->unique('loginTOPNET');
             $table->string('etat');
             $table->string('first_time_login');

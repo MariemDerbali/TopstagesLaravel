@@ -22,15 +22,18 @@ class TestPsychotechniqueController extends Controller
      */
     public function indexQuestionsReponses(Request $request)
     {
-
+        //le domaine et le type de stage sélectionné par le stagiaire
         $domaine = Testpsychotechnique::get()->last()->domaine;
         $type = Testpsychotechnique::get()->last()->type;
 
+        //obtenir le critère correspondant au domaine et au type de stage
         $critere = Critere::where('typestage', $type)->where('domainestage', $domaine)->where('etat', 'active')->first();
 
+        //s'il est trouvé
         if ($critere) {
-            $duree = 0;
-            $RandomQuestions = [];
+
+            $duree = 0; //durée test
+            $RandomQuestions = []; //array de de questions
 
             $nbrquestionsfaciles = $critere->nombrequestionsfaciles;
             $nbrquestionsmoyennes = $critere->nombrequestionsmoyennes;
@@ -40,7 +43,7 @@ class TestPsychotechniqueController extends Controller
             $notequestionmoyenne = $critere->notequestionmoyenne * $nbrquestionsmoyennes;
             $notequestiondifficile = $critere->notequestiondifficile * $nbrquestionsdifficiles;
 
-            $notetotale = $notequestionfacile + $notequestionmoyenne + $notequestiondifficile;
+            $notetotale = $notequestionfacile + $notequestionmoyenne + $notequestiondifficile; //note test
 
 
             $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random($nbrquestionsfaciles);
@@ -50,8 +53,8 @@ class TestPsychotechniqueController extends Controller
 
                 $RandomQuestions[] = [
                     'question' => $qf,
-                    'reponses' => Reponse::where('questionID', $qf->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qf->_id)->where('reponseCorrecte', 'Oui')->get(),
+                    'reponses' => Reponse::where('questionID', $qf->_id)->where('etat', 'active')->get(),
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qf->_id)->where('reponseCorrecte', 'Oui')->get()->where('etat', 'active'),
 
 
                 ];
@@ -64,8 +67,8 @@ class TestPsychotechniqueController extends Controller
 
                 $RandomQuestions[] = [
                     'question' => $qm,
-                    'reponses' => Reponse::where('questionID', $qm->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qm->_id)->where('reponseCorrecte', 'Oui')->get(),
+                    'reponses' => Reponse::where('questionID', $qm->_id)->where('etat', 'active')->get(),
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qm->_id)->where('reponseCorrecte', 'Oui')->where('etat', 'active')->get(),
 
                 ];
             }
@@ -76,8 +79,8 @@ class TestPsychotechniqueController extends Controller
                 $duree = $duree + $qd->duree;
                 $RandomQuestions[] = [
                     'question' => $qd,
-                    'reponses' => Reponse::where('questionID', $qd->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qd->_id)->where('reponseCorrecte', 'Oui')->get(),
+                    'reponses' => Reponse::where('questionID', $qd->_id)->where('etat', 'active')->get(),
+                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qd->_id)->where('reponseCorrecte', 'Oui')->where('etat', 'active')->get(),
 
 
                 ];

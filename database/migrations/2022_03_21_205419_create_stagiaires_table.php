@@ -18,7 +18,6 @@ class CreateStagiairesTable extends Migration
             $table->string('nom');
             $table->string('prenom');
             $table->string('description');
-            $table->string('role_id');
             $table->string('adresse');
             $table->string('tel');
             $table->string('image');
