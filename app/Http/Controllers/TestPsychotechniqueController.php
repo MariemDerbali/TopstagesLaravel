@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Critere;
 use App\Models\Reponse;
 use App\Models\Question;
 use App\Models\Stagiaire;
@@ -24,12 +25,25 @@ class TestPsychotechniqueController extends Controller
 
         $domaine = Testpsychotechnique::get()->last()->domaine;
         $type = Testpsychotechnique::get()->last()->type;
-        $duree = 0;
 
-        $RandomQuestions = [];
+        $critere = Critere::where('typestage', $type)->where('domainestage', $domaine)->where('etat', 'active')->first();
 
-        if ($domaine === "DSI" && $type === "Stage PFE") {
-            $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random(2);
+        if ($critere) {
+            $duree = 0;
+            $RandomQuestions = [];
+
+            $nbrquestionsfaciles = $critere->nombrequestionsfaciles;
+            $nbrquestionsmoyennes = $critere->nombrequestionsmoyennes;
+            $nbrquestionsdifficiles = $critere->nombrequestionsdifficiles;
+
+            $notequestionfacile = $critere->notequestionfacile * $nbrquestionsfaciles;
+            $notequestionmoyenne = $critere->notequestionmoyenne * $nbrquestionsmoyennes;
+            $notequestiondifficile = $critere->notequestiondifficile * $nbrquestionsdifficiles;
+
+            $notetotale = $notequestionfacile + $notequestionmoyenne + $notequestiondifficile;
+
+
+            $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random($nbrquestionsfaciles);
 
             foreach ($randomQuestionsFacile as $qf) {
                 $duree = $duree + $qf->duree;
@@ -42,7 +56,8 @@ class TestPsychotechniqueController extends Controller
 
                 ];
             }
-            $randomQuestionsMoyenne = Question::where('niveau', 'Moyenne')->get()->random(2);
+
+            $randomQuestionsMoyenne = Question::where('niveau', 'Moyenne')->get()->random($nbrquestionsmoyennes);
 
             foreach ($randomQuestionsMoyenne as $qm) {
                 $duree = $duree + $qm->duree;
@@ -55,7 +70,8 @@ class TestPsychotechniqueController extends Controller
                 ];
             }
 
-            $randomQuestionsDifficile = Question::where('niveau', 'difficile')->get()->random(2);
+            $randomQuestionsDifficile = Question::where('niveau', 'difficile')->get()->random($nbrquestionsdifficiles);
+
             foreach ($randomQuestionsDifficile as $qd) {
                 $duree = $duree + $qd->duree;
                 $RandomQuestions[] = [
@@ -66,86 +82,31 @@ class TestPsychotechniqueController extends Controller
 
                 ];
             }
-        } else if ($domaine === "DSI" && $type === "Stage Perfectionnement") {
-            $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random(2);
 
-            foreach ($randomQuestionsFacile as $qf) {
-                $RandomQuestions[] = [
-                    'question' => $qf,
-                    'reponses' => Reponse::where('questionID', $qf->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qf->_id)->where('reponseCorrecte', 'Oui')->get()
 
-                ];
+
+            $id = auth()->user()->_id;
+            $stagiaire = Stagiaire::find($id);
+
+            if ($RandomQuestions && $stagiaire) {
+                return response()->json([
+                    'status' => 200,
+                    'questionsreponses' => $RandomQuestions,
+                    'duree' => $duree,
+                    'notetotale' => $notetotale,
+                    'stagiaire' => $stagiaire
+
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Pas de questions trouvées ou stagiaire'
+                ]);
             }
-            $randomQuestionsMoyenne = Question::where('niveau', 'Moyenne')->get()->random(2);
-
-            foreach ($randomQuestionsMoyenne as $qm) {
-                $RandomQuestions[] = [
-                    'question' => $qm,
-                    'reponses' => Reponse::where('questionID', $qm->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qm->_id)->where('reponseCorrecte', 'Oui')->get()
-
-                ];
-            }
-
-            $randomQuestionsDifficile = Question::where('niveau', 'difficile')->get()->random(2);
-            foreach ($randomQuestionsDifficile as $qd) {
-                $RandomQuestions[] = [
-                    'question' => $qd,
-                    'reponses' => Reponse::where('questionID', $qd->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qd->_id)->where('reponseCorrecte', 'Oui')->get()
-
-                ];
-            }
-        } else if ($domaine === "DSI" && $type === "Stage initiaion") {
-            $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random(2);
-
-            foreach ($randomQuestionsFacile as $qf) {
-                $RandomQuestions[] = [
-                    'question' => $qf,
-                    'reponses' => Reponse::where('questionID', $qf->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qf->_id)->where('reponseCorrecte', 'Oui')->get()
-
-                ];
-            }
-            $randomQuestionsMoyenne = Question::where('niveau', 'Moyenne')->get()->random(2);
-
-            foreach ($randomQuestionsMoyenne as $qm) {
-                $RandomQuestions[] = [
-                    'question' => $qm,
-                    'reponses' => Reponse::where('questionID', $qm->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qm->_id)->where('reponseCorrecte', 'Oui')->get()
-
-                ];
-            }
-
-            $randomQuestionsDifficile = Question::where('niveau', 'difficile')->get()->random(2);
-            foreach ($randomQuestionsDifficile as $qd) {
-                $RandomQuestions[] = [
-                    'question' => $qd,
-                    'reponses' => Reponse::where('questionID', $qd->_id)->get(),
-                    'reponsecorrecte' => DB::collection('reponses')->where('questionID', $qd->_id)->where('reponseCorrecte', 'Oui')->get()
-
-                ];
-            }
-        }
-
-
-        $id = auth()->user()->_id;
-        $stagiaire = Stagiaire::find($id);
-
-        if ($RandomQuestions && $stagiaire) {
-            return response()->json([
-                'status' => 200,
-                'questionsreponses' => $RandomQuestions,
-                'duree' => $duree,
-                'stagiaire' => $stagiaire
-
-            ]);
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'Pas de questions trouvées ou stagiaire'
+                'message' => 'Pas de critère trouvé'
             ]);
         }
     }
