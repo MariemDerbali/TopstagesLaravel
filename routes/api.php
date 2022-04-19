@@ -14,7 +14,7 @@ use App\Http\Controllers\OffreStageController;
 use App\Http\Controllers\ProfileTopnetController;
 use App\Http\Controllers\ChefDepartementController;
 use App\Http\Controllers\ProfileStagiaireController;
-use App\Http\Controllers\TestPsychotechniqueController;
+use App\Http\Controllers\DemandestageController;
 
 
 /*
@@ -66,6 +66,7 @@ Route::get('/homepage-getoffres', [PublicController::class, 'getOffres']);
 
 //Route pour postuler l'offre demandée
 Route::post('/homepage-postuler', [PublicController::class, 'postOffreDemandee']);
+
 
 
 
@@ -155,6 +156,13 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::get('/edit-critere/{id}', [CritereController::class, 'edit']);
 });
 
+/*-------------Demandes de stage-------------*/
+
+//Route pour obtenir les demandes de stage
+Route::get('/demandesdestage', [DemandestageController::class, 'GetDemandesDeStage']);
+//Route pour valider les demandes de stage
+Route::put('/valider-demande/{id}', [DemandestageController::class, 'validerDemande']);
+
 //--------------------------Routes privés pour l'Encadrant-----------------------------------
 Route::group(['middleware' => ['auth:sanctum', 'isEncadrant']], function () {
 
@@ -191,7 +199,13 @@ Route::group(['middleware' => ['auth:sanctum', 'isStagiaire']], function () {
     Route::post('/profil-stagiaire/{id}', [ProfileStagiaireController::class, 'update']);
 
     //Route pour obtenir les questions facile et les réponses du test psychotechnique
-    Route::get('/getquestionsreponses', [TestPsychotechniqueController::class, 'indexQuestionsReponses']);
+    Route::get('/getquestionsreponses', [DemandestageController::class, 'indexQuestionsReponses']);
+
+    //Route pour obtenir ma demande de stage
+    Route::get('/monpost/{id}', [DemandestageController::class, 'monPost']);
+
+    //Route pour postuler
+    Route::post('/postuler/{id}', [DemandestageController::class, 'update']);
 });
 
 

@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Jenssegers\Mongodb\Eloquent\Model;
 
-class Testpsychotechnique extends Model
+
+class DemandeStage extends Model
 {
     use HasFactory;
     protected $connection = 'mongodb';
-    protected $collection = 'testpsychotechniques';
+    protected $collection = 'demande_stages';
     protected $guarded = [];
 }

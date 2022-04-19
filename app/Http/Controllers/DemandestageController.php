@@ -6,14 +6,17 @@ use App\Models\Critere;
 use App\Models\Reponse;
 use App\Models\Question;
 use App\Models\Stagiaire;
-use App\Models\Testpsychotechnique;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+use App\Models\DemandeStage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 
 
-class TestPsychotechniqueController extends Controller
+class DemandestageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,8 +26,9 @@ class TestPsychotechniqueController extends Controller
     public function indexQuestionsReponses(Request $request)
     {
         //le domaine et le type de stage sélectionné par le stagiaire
-        $domaine = Testpsychotechnique::get()->last()->domaine;
-        $type = Testpsychotechnique::get()->last()->type;
+        $postID = DemandeStage::get()->last()->_id;
+        $domaine = DemandeStage::get()->last()->domaine;
+        $type = DemandeStage::get()->last()->type;
 
         //obtenir le critère correspondant au domaine et au type de stage
         $critere = Critere::where('typestage', $type)->where('domainestage', $domaine)->where('etat', 'active')->first();
@@ -97,7 +101,9 @@ class TestPsychotechniqueController extends Controller
                     'questionsreponses' => $RandomQuestions,
                     'duree' => $duree,
                     'notetotale' => $notetotale,
-                    'stagiaire' => $stagiaire
+                    'stagiaire' => $stagiaire,
+                    'postid' => $postID,
+
 
                 ]);
             } else {
@@ -170,8 +176,53 @@ class TestPsychotechniqueController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $post = DemandeStage::find($id);
+
+        if ($post) {
+
+
+            if ($request->hasFile('ficherep') && $request->hasFile('cv')) {
+                $pathFiche = $post->ficherep;
+                $pathCV = $post->cv;
+
+                if (File::exists($pathFiche) || File::exists($pathCV)) {
+
+                    File::delete($pathFiche);
+                    File::delete($pathCV);
+                }
+                $fileFiche = $request->file('ficherep');
+                $fileCV = $request->file('cv');
+                $extensionFiche = $fileFiche->getClientOriginalExtension();
+                $extensionCV = $fileCV->getClientOriginalExtension();
+
+                $filenameFiche = Str::random(5) . '.' . $extensionFiche;
+                $filenameCV = Str::random(5) . '.' . $extensionCV;
+                $fileFiche->move('img/post/', $filenameFiche);
+                $fileCV->move('img/post/', $filenameCV);
+
+                $post->ficherep = 'img/post/' . $filenameFiche;
+                $post->cv = 'img/post/' . $filenameCV;
+            }
+
+            $post->etatpost = 'published';
+            $post->etatdemande = 'Nouvellement créé';
+
+
+            $post->update();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Vous avez postulé avec succès',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Post non trouvé',
+            ]);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -182,5 +233,55 @@ class TestPsychotechniqueController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function monPost($id)
+    {
+        $post =  DemandeStage::where('_id', $id)->first();
+        return response()->json([
+            'status' => 200,
+            'post' => $post
+        ]);
+    }
+
+    public function GetDemandesDeStage()
+    {
+        $demandesdestages = DemandeStage::where('etatpost', 'published')->get();
+
+
+        return response()->json([
+            'status' => 200,
+            'demandesStage' => $demandesdestages,
+
+        ]);
+    }
+
+    public function ValiderDemande($id)
+    {
+        $demande = DemandeStage::find($id);
+        if ($demande) {
+            if ($demande->etatdemande == 'Nouvellement créé') {
+                $demande->etatdemande = 'En cours de traitement';
+                $demande->save();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'La demande est en cours de traitement'
+                ]);
+            } else if ($demande->etatdemande = 'En cours de traitement') {
+                $demande->etatdemande = 'Traitée';
+                $demande->save();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'la demande est traitée'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "la demande est introuvable"
+            ]);
+        }
     }
 }

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\OffreStage;
-use App\Models\Testpsychotechnique;
+use App\Models\Stagiaire;
+use App\Models\DemandeStage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -48,11 +49,19 @@ class PublicController extends Controller
                 'message' => 'Veuillez choisir le domaine et le type de stage'
             ]);
         } else {
-            $offredemande = new Testpsychotechnique;
+            $offredemande = new DemandeStage;
             $offredemande->domaine = $request->input('domaine');
             $offredemande->type = $request->input('type');
 
-            $offredemande->stagiaireID = $request->stagiaireID;
+            $idstagiaire = $request->stagiaireID;
+            $offredemande->stagiaireID = $idstagiaire;
+
+            $stagiaire = Stagiaire::find($idstagiaire);
+            $offredemande->cinpasseport = $stagiaire->cinpasseport;
+            $offredemande->nom = $stagiaire->nom;
+            $offredemande->prenom = $stagiaire->prenom;
+            $offredemande->email = $stagiaire->email;
+
 
             $offredemande->save();
 
