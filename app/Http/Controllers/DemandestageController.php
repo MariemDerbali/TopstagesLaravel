@@ -9,6 +9,7 @@ use App\Models\Stagiaire;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 use App\Models\DemandeStage;
 use Illuminate\Support\Facades\File;
@@ -203,6 +204,7 @@ class DemandestageController extends Controller
 
                 $post->ficherep = 'img/post/' . $filenameFiche;
                 $post->cv = 'img/post/' . $filenameCV;
+                $post->date = Carbon::now()->toDateTimeString();
             }
 
             $post->etatpost = 'published';
@@ -235,6 +237,7 @@ class DemandestageController extends Controller
         //
     }
 
+
     public function monPost($id)
     {
         $post =  DemandeStage::where('_id', $id)->first();
@@ -244,44 +247,17 @@ class DemandestageController extends Controller
         ]);
     }
 
-    public function GetDemandesDeStage()
+    public function SuivreMonDossier()
     {
-        $demandesdestages = DemandeStage::where('etatpost', 'published')->get();
+        $id = auth()->user()->_id;
+        $currentuser = Stagiaire::find($id);
 
+        $demandesdestages = DemandeStage::where('stagiaire.stagiaireId', $currentuser->id)->where('etatpost', 'published')->get();
 
         return response()->json([
             'status' => 200,
-            'demandesStage' => $demandesdestages,
+            'dossier' => $demandesdestages,
 
         ]);
-    }
-
-    public function ValiderDemande($id)
-    {
-        $demande = DemandeStage::find($id);
-        if ($demande) {
-            if ($demande->etatdemande == 'Nouvellement créé') {
-                $demande->etatdemande = 'En cours de traitement';
-                $demande->save();
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'La demande est en cours de traitement'
-                ]);
-            } else if ($demande->etatdemande = 'En cours de traitement') {
-                $demande->etatdemande = 'Traitée';
-                $demande->save();
-
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'la demande est traitée'
-                ]);
-            }
-        } else {
-            return response()->json([
-                'status' => 401,
-                'message' => "la demande est introuvable"
-            ]);
-        }
     }
 }

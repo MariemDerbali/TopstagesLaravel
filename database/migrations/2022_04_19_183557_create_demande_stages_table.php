@@ -19,11 +19,8 @@ class CreateDemandeStagesTable extends Migration
             $table->string('type');
             $table->string('ficherep');
             $table->string('cv');
-            $table->string('stagiaireID');
-            $table->string('nom');
-            $table->string('prenom');
-            $table->string('cinpasseport');
-            $table->string('email');
+            $table->date('date');
+            $table->string('stagiaire');
             $table->string('etatpost');
             $table->string('etatdemande');
             $table->string('etataccepter');

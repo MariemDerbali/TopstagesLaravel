@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Critere;
+use App\Models\DemandeStage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -208,6 +209,47 @@ class CritereController extends Controller
             return response()->json([
                 'status' => 401,
                 'message' => "Critère non trouvé"
+            ]);
+        }
+    }
+
+    public function GetDemandesDeStage()
+    {
+        $demandesdestages = DemandeStage::where('etatpost', 'published')->get();
+
+
+        return response()->json([
+            'status' => 200,
+            'demandesStage' => $demandesdestages,
+
+        ]);
+    }
+
+    public function ValiderDemande($id)
+    {
+        $demande = DemandeStage::find($id);
+        if ($demande) {
+            if ($demande->etatdemande == 'Nouvellement créé') {
+                $demande->etatdemande = 'En cours de traitement';
+                $demande->save();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'La demande est en cours de traitement'
+                ]);
+            } else if ($demande->etatdemande = 'En cours de traitement') {
+                $demande->etatdemande = 'Traitée';
+                $demande->save();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'la demande est traitée'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "la demande est introuvable"
             ]);
         }
     }

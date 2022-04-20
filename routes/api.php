@@ -154,14 +154,16 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     //Routes pour modifier un critere
     Route::post('/criteres/{id}', [CritereController::class, 'update']);
     Route::get('/edit-critere/{id}', [CritereController::class, 'edit']);
+
+    /*-------------Demandes de stage-------------*/
+
+    //Route pour obtenir les demandes de stage
+    Route::get('/demandesdestage', [CritereController::class, 'GetDemandesDeStage']);
+    //Route pour valider les demandes de stage
+    Route::put('/valider-demande/{id}', [CritereController::class, 'validerDemande']);
 });
 
-/*-------------Demandes de stage-------------*/
 
-//Route pour obtenir les demandes de stage
-Route::get('/demandesdestage', [DemandestageController::class, 'GetDemandesDeStage']);
-//Route pour valider les demandes de stage
-Route::put('/valider-demande/{id}', [DemandestageController::class, 'validerDemande']);
 
 //--------------------------Routes privés pour l'Encadrant-----------------------------------
 Route::group(['middleware' => ['auth:sanctum', 'isEncadrant']], function () {
@@ -206,6 +208,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isStagiaire']], function () {
 
     //Route pour postuler
     Route::post('/postuler/{id}', [DemandestageController::class, 'update']);
+
+    Route::get('/mondossier', [DemandestageController::class, 'SuivreMonDossier']);
 });
 
 

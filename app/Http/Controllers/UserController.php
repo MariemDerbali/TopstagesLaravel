@@ -21,8 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //obtenir la liste de tous les utilisateurs avec un rôle différent de stagiarie
-        $users = User::where('role_id', '!=', 'Stagiaire')->get();
+        $users = User::all();
 
         return response()->json([
             'status' => 200,

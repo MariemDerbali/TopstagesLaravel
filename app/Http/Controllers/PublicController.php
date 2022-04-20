@@ -54,13 +54,17 @@ class PublicController extends Controller
             $offredemande->type = $request->input('type');
 
             $idstagiaire = $request->stagiaireID;
-            $offredemande->stagiaireID = $idstagiaire;
-
             $stagiaire = Stagiaire::find($idstagiaire);
-            $offredemande->cinpasseport = $stagiaire->cinpasseport;
-            $offredemande->nom = $stagiaire->nom;
-            $offredemande->prenom = $stagiaire->prenom;
-            $offredemande->email = $stagiaire->email;
+
+            $stagiairearray[] = [
+                'stagiaireId' => $stagiaire->id,
+                'nom' => $stagiaire->nom,
+                'prenom' => $stagiaire->prenom,
+                'email' => $stagiaire->email,
+            ];
+
+            $offredemande->stagiaire =  $stagiairearray;
+
 
 
             $offredemande->save();
