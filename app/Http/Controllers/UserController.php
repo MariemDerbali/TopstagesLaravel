@@ -238,6 +238,15 @@ class UserController extends Controller
         ]);
     }
 
+    public function GetDirections()
+    {
+        //Obtenir la liste de tous les directions activés
+        $directions =  DB::collection('directions')->where('etat', 'active')->get();
+        return response()->json([
+            'status' => 200,
+            'directions' => $directions
+        ]);
+    }
     public function desactiverUser($id)
     {
         $user  = User::find($id);

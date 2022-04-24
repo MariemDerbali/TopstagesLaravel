@@ -11,13 +11,13 @@ use Illuminate\Support\Facades\Validator;
 
 class PublicController extends Controller
 {
-    public function GetDepartements()
+    public function GetDirections()
     {
-        //Obtenir la liste de tous les départements activés
-        $deps =  DB::collection('departments')->where('etat', 'active')->get();
+        //Obtenir la liste de tous les directions activés
+        $directions =  DB::collection('directions')->where('etat', 'active')->get();
         return response()->json([
             'status' => 200,
-            'deps' => $deps
+            'directions' => $directions
         ]);
     }
 

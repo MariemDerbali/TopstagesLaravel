@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
-use Illuminate\Http\Request;
+use App\Models\Direction;
 use Illuminate\Support\Facades\Validator;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
-class DepartmentController extends Controller
+class DirectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +18,12 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        //
+        $directions = Direction::all();
+
+        return response()->json([
+            'status' => 200,
+            'directions' => $directions,
+        ]);
     }
 
     /**
@@ -38,13 +44,10 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nomdep' => 'required',
-            'chefdep' => 'required'
-        ]);
 
-        $validatordirectionId = Validator::make($request->all(), [
-            'direction' => 'required',
+        $validator = Validator::make($request->all(), [
+
+            'nomdirection' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -52,22 +55,23 @@ class DepartmentController extends Controller
                 'status' => 422,
                 'errors' => $validator->messages(),
             ]);
-        } else if ($validatordirectionId->fails()) {
-            return response()->json([
-                'status' => 423,
-                'message' => "Vous devez d'abord créer une direction",
-            ]);
         } else {
-            $Dep = new Department;
-            $Dep->nomdep = $request->input('nomdep');
-            $Dep->chefdep = $request->input('chefdep');
-            $Dep->direction = $request->direction;
-            $Dep->etat = 'active';
-            $Dep->save();
+
+
+            $direction = new Direction;
+            $direction->nomdirection = $request->input('nomdirection');
+
+
+            $direction->etat = 'active';
+
+            $direction->save();
+            $id = $direction->_id;
+
+
             return response()->json([
                 'status' => 200,
-                'message' => 'Département est créé avec succès',
-                'Department' => $Dep,
+                'message' => 'Direction est créée avec succès',
+                'DirectionId' => $id
 
             ]);
         }
@@ -81,7 +85,7 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        return Department::where('_id', $id)->first();
+        return Direction::where('_id', $id)->first();
     }
 
     /**
@@ -92,16 +96,16 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        $dep = $this->show($id);
-        if ($dep) {
+        $direction = $this->show($id);
+        if ($direction) {
             return response()->json([
                 'status' => 200,
-                'dep' => $dep,
+                'direction' => $direction,
             ]);
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'Aucun département trouvé',
+                'message' => 'Aucune direction trouvée',
             ]);
         }
     }
@@ -115,10 +119,8 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //Mettre à jour un département
         $validator = Validator::make($request->all(), [
-            'nomdep' => ['required', 'string', 'max:255'],
-            'chefdep' => ['required', 'string', 'max:255']
+            'nomdirection' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -126,22 +128,22 @@ class DepartmentController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-            $dep = Department::find($id);
+            $direction = Direction::find($id);
 
-            if ($dep) {
+            if ($direction) {
 
-                $dep->nomdep = $request->input('nomdep');
-                $dep->chefdep = $request->input('chefdep');
-                $dep->update();
+                $direction->nomdirection = $request->input('nomdirection');
+
+                $direction->update();
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Département mis à jour avec succès',
+                    'message' => 'Mise à jour effectuée avec succès',
                 ]);
             } else {
                 return response()->json([
                     'status' => 404,
-                    'message' => 'Département non trouvé',
+                    'message' => 'Direction non trouvée',
                 ]);
             }
         }
@@ -158,29 +160,41 @@ class DepartmentController extends Controller
         //
     }
 
-    public function desactiverDepartement($id)
+    public function getdepartements($id)
     {
-        $dep  = Department::find($id);
-        if ($dep) {
-            if ($dep->etat == 'active') {
-                $dep->etat = 'inactive';
-                $dep->save();
+        $deps = DB::collection('departments')->where('direction', $id)->get();
+
+        return response()->json([
+            'status' => 200,
+            'departements' => $deps
+        ]);
+    }
+
+
+
+    public function desactiverDirection($id)
+    {
+        $direction  = Direction::find($id);
+        if ($direction) {
+            if ($direction->etat == 'active') {
+                $direction->etat = 'inactive';
+                $direction->save();
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Département est désactivé'
+                    'message' => 'Direction est désactivée'
                 ]);
             } else {
-                $dep->etat = 'active';
-                $dep->save();
+                $direction->etat = 'active';
+                $direction->save();
                 return response()->json([
                     'status' => 201,
-                    'message' => 'Département est activé'
+                    'message' => 'Direction est activée'
                 ]);
             }
         } else {
             return response()->json([
                 'status' => 401,
-                'message' => "Département non trouvé"
+                'message' => "Direction non trouvée"
             ]);
         }
     }
