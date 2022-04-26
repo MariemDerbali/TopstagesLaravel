@@ -209,6 +209,8 @@ class DemandestageController extends Controller
 
             $post->etatpost = 'published';
             $post->etatdemande = 'Nouvellement créé';
+            $post->etatprise = 'faux';
+
 
 
             $post->update();

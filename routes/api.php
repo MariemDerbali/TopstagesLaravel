@@ -253,4 +253,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Route pour modifier une offre
     Route::post('/offres/{id}', [OffreStageController::class, 'update']);
     Route::get('/edit-offre/{id}', [OffreStageController::class, 'edit']);
+
+    Route::get('/encadrant-demandes', [OffreStageController::class, 'Demandes']);
+
+    Route::put('/prise-en-charge/{id}', [OffreStageController::class, 'PriseEnCharge']);
 });

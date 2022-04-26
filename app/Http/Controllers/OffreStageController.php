@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\OffreStage;
-use Illuminate\Support\Facades\DB;
+use App\Models\DemandeStage;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OffreStageController extends Controller
@@ -225,6 +226,50 @@ class OffreStageController extends Controller
             return response()->json([
                 'status' => 401,
                 'message' => "Offre non trouvée"
+            ]);
+        }
+    }
+
+    public function Demandes()
+    {
+        $demandestraités = DemandeStage::where('etatdemande', 'Traité')->get();
+
+        if ($demandestraités) {
+            return response()->json([
+                'status' => 200,
+                'demandes' => $demandestraités
+            ]);
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Demande non trouvé"
+            ]);
+        }
+    }
+
+    public function PriseEnCharge($id)
+    {
+        $demande  = DemandeStage::find($id);
+        if ($demande) {
+            if ($demande->etatprise !== 'vrai') {
+                $demande->etatprise = 'vrai';
+                $demande->save();
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Stagiaire est pris en charge'
+                ]);
+            } else {
+                $demande->etatprise = 'faux';
+                $demande->save();
+                return response()->json([
+                    'status' => 201,
+                    'message' => 'Prise en charge est annulée'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Demande non trouvé"
             ]);
         }
     }

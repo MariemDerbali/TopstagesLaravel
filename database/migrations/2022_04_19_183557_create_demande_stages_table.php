@@ -23,7 +23,7 @@ class CreateDemandeStagesTable extends Migration
             $table->string('stagiaire');
             $table->string('etatpost');
             $table->string('etatdemande');
-            $table->string('etataccepter');
+            $table->string('etatprise');
             $table->timestamps();
         });
     }
