@@ -9,6 +9,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\CritereController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ReunionsController;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\OffreStageController;
@@ -255,6 +256,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/edit-offre/{id}', [OffreStageController::class, 'edit']);
 
     Route::get('/encadrant-demandes', [OffreStageController::class, 'Demandes']);
-
     Route::put('/prise-en-charge/{id}', [OffreStageController::class, 'PriseEnCharge']);
+
+    Route::post('/reunions', [ReunionsController::class, 'store']);
+    Route::get('/reunions', [ReunionsController::class, 'index']);
 });
