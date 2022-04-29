@@ -15,10 +15,10 @@ class CreateReunionsTable extends Migration
     {
         Schema::create('reunions', function (Blueprint $table) {
             $table->id();
-            $table->string('titre');
+            $table->string('title');
             $table->string('url');
-            $table->date('debut');
-            $table->date('fin');
+            $table->string('start');
+            $table->string('end');
             $table->timestamps();
         });
     }

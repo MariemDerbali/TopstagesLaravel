@@ -20,6 +20,7 @@ class ReunionsController extends Controller
         return response()->json([
             'status' => 200,
             'reunions' => $reunions,
+
         ]);
     }
 
@@ -43,10 +44,10 @@ class ReunionsController extends Controller
     {
         $validator = Validator::make($request->all(), [
 
-            'titre' => 'required',
+            'title' => 'required',
             'url' => 'required',
-            'debut' => 'required',
-            'fin' => 'required',
+            'start' => 'required',
+            'end' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -56,12 +57,11 @@ class ReunionsController extends Controller
             ]);
         } else {
 
-
             $reunion = new Reunion;
-            $reunion->titre = $request->input('titre');
+            $reunion->title = $request->input('title');
             $reunion->url = $request->input('url');
-            $reunion->debut = $request->input('debut');
-            $reunion->fin = $request->input('fin');
+            $reunion->start = Date("Y-m-d H:i", strtotime(current(explode("(", $request->input('start'))) . '+1 hour'));
+            $reunion->end = Date("Y-m-d H:i", strtotime(current(explode("(", $request->input('end'))) . '+1 hour'));
 
             $reunion->save();
 
