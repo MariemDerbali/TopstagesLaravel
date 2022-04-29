@@ -81,7 +81,7 @@ class ReunionsController extends Controller
      */
     public function show($id)
     {
-        //
+        return Reunion::where('_id', $id)->first();
     }
 
     /**
@@ -92,7 +92,18 @@ class ReunionsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $reunion = $this->show($id);
+        if ($reunion) {
+            return response()->json([
+                'status' => 200,
+                'reunion' => $reunion,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Aucune réunion trouvée',
+            ]);
+        }
     }
 
     /**
@@ -104,7 +115,41 @@ class ReunionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'url' => 'required',
+            'start' => 'required',
+            'end' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 422,
+                'errors' => $validator->messages(),
+            ]);
+        } else {
+            $reunion = Reunion::find($id);
+
+            if ($reunion) {
+
+                $reunion->title = $request->input('title');
+                $reunion->url = $request->input('url');
+                $reunion->start = Date("Y-m-d H:i", strtotime(current(explode("(", $request->input('start'))) . '+1 hour'));
+                $reunion->end = Date("Y-m-d H:i", strtotime(current(explode("(", $request->input('end'))) . '+1 hour'));
+
+
+                $reunion->update();
+
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Mise à jour effectuée avec succès',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Réunion non trouvée',
+                ]);
+            }
+        }
     }
 
     /**

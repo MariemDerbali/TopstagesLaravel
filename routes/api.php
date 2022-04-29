@@ -260,4 +260,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/reunions', [ReunionsController::class, 'store']);
     Route::get('/reunions', [ReunionsController::class, 'index']);
+    Route::get('/edit-reunion/{id}', [ReunionsController::class, 'edit']);
+    Route::post('/reunions/{id}', [ReunionsController::class, 'update']);
 });
