@@ -160,6 +160,19 @@ class ReunionsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $reunion  = Reunion::find($id);
+        if ($reunion) {
+            $reunion->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Réunion est annulée'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 401,
+                'message' => "Réunion non trouvée"
+            ]);
+        }
     }
 }
