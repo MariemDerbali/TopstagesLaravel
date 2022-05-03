@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 use App\Models\DemandeStage;
+use App\Models\NotificationDocuments;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-
-
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DemandestageController extends Controller
 {
@@ -261,5 +261,94 @@ class DemandestageController extends Controller
             'dossier' => $demandesdestages,
 
         ]);
+    }
+
+
+    public function MessagesDocuments()
+    {
+        $id = auth()->user()->_id;
+        $currentuser = Stagiaire::find($id);
+
+        $notif = NotificationDocuments::where('Stagiaire_id', $currentuser->id)->latest()->first();
+
+        if ($notif) {
+            return response()->json([
+                'status' => 200,
+                'notif' => $notif,
+
+            ]);
+        } else {
+            return response()->json([
+                'status' => 401,
+
+            ]);
+        }
+    }
+
+    public function UpdateDocuments(Request $request, $id)
+    {
+        $post = DemandeStage::find($id);
+
+        if ($post) {
+
+
+            if ($request->hasFile('ficherep')) {
+                $pathFiche = $post->ficherep;
+
+                if (File::exists($pathFiche)) {
+
+                    File::delete($pathFiche);
+                }
+                $fileFiche = $request->file('ficherep');
+                $extensionFiche = $fileFiche->getClientOriginalExtension();
+
+                $filenameFiche = Str::random(5) . '.' . $extensionFiche;
+                $fileFiche->move('img/post/', $filenameFiche);
+
+                $post->ficherep = 'img/post/' . $filenameFiche;
+                $post->date = Carbon::now()->toDateTimeString();
+            }
+
+            if ($request->hasFile('cv')) {
+                $pathCV = $post->cv;
+
+                if (File::exists($pathCV)) {
+
+                    File::delete($pathCV);
+                }
+                $fileCV = $request->file('cv');
+                $extensionCV = $fileCV->getClientOriginalExtension();
+
+                $filenameCV = Str::random(5) . '.' . $extensionCV;
+                $fileCV->move('img/post/', $filenameCV);
+
+                $post->cv = 'img/post/' . $filenameCV;
+                $post->date = Carbon::now()->toDateTimeString();
+            }
+
+
+
+            $id = auth()->user()->_id;
+            $currentuser = Stagiaire::find($id);
+
+
+            $notif = NotificationDocuments::where('Stagiaire_id', $currentuser->id)->latest()->first();
+
+            if ($notif) {
+                $notif->delete();
+            }
+
+            $post->update();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Mise à jour effectuée avec succès',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Post non trouvé',
+            ]);
+        }
     }
 }

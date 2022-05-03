@@ -16,6 +16,7 @@ use App\Http\Controllers\OffreStageController;
 use App\Http\Controllers\DemandestageController;
 use App\Http\Controllers\ProfileTopnetController;
 use App\Http\Controllers\ChefDepartementController;
+use App\Http\Controllers\NotifDocumentsController;
 use App\Http\Controllers\ProfileStagiaireController;
 
 
@@ -173,6 +174,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::get('/demandesdestage', [CritereController::class, 'GetDemandesDeStage']);
     //Route pour valider les demandes de stage
     Route::put('/valider-demande/{id}', [CritereController::class, 'validerDemande']);
+
+    Route::post('/informer-stagiaire', [NotifDocumentsController::class, 'store']);
 });
 
 
@@ -221,7 +224,11 @@ Route::group(['middleware' => ['auth:sanctum', 'isStagiaire']], function () {
     //Route pour postuler
     Route::post('/postuler/{id}', [DemandestageController::class, 'update']);
 
+    //Routes pour suivre mes dossier
     Route::get('/mondossier', [DemandestageController::class, 'SuivreMonDossier']);
+    Route::get('/notif', [DemandestageController::class, 'MessagesDocuments']);
+    //Route pour modifier mes documents
+    Route::post('/documents/{id}', [DemandestageController::class, 'UpdateDocuments']);
 });
 
 
