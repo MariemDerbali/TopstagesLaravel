@@ -254,7 +254,7 @@ class DemandestageController extends Controller
         $id = auth()->user()->_id;
         $currentuser = Stagiaire::find($id);
 
-        $demandesdestages = DemandeStage::where('stagiaire.stagiaireId', $currentuser->id)->where('etatpost', 'published')->get();
+        $demandesdestages = DemandeStage::where('stagiaire.stagiaireId', $currentuser->_id)->where('etatpost', 'published')->get();
 
         return response()->json([
             'status' => 200,
@@ -269,7 +269,7 @@ class DemandestageController extends Controller
         $id = auth()->user()->_id;
         $currentuser = Stagiaire::find($id);
 
-        $notif = NotificationDocuments::where('Stagiaire_id', $currentuser->id)->latest()->first();
+        $notif = NotificationDocuments::where('Stagiaire_id', $currentuser->_id)->latest()->first();
 
         if ($notif) {
             return response()->json([
@@ -332,7 +332,7 @@ class DemandestageController extends Controller
             $currentuser = Stagiaire::find($id);
 
 
-            $notif = NotificationDocuments::where('Stagiaire_id', $currentuser->id)->latest()->first();
+            $notif = NotificationDocuments::where('Stagiaire_id', $currentuser->_id)->latest()->first();
 
             if ($notif) {
                 $notif->delete();
@@ -348,6 +348,24 @@ class DemandestageController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Post non trouvé',
+            ]);
+        }
+    }
+
+    public function Mademande()
+    {
+        $id = auth()->user()->_id;
+        $currentuser = Stagiaire::find($id);
+        $demande =  DemandeStage::where('etatprise', 'vrai')->where('stagiaire.stagiaireId', $currentuser->_id)->first();
+
+        if ($demande) {
+            return response()->json([
+                'status' => 200,
+                'demande' => $demande
+            ]);
+        } else {
+            return response()->json([
+                'status' => 401,
             ]);
         }
     }

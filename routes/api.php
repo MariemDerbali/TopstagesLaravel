@@ -229,6 +229,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isStagiaire']], function () {
     Route::get('/notif', [DemandestageController::class, 'MessagesDocuments']);
     //Route pour modifier mes documents
     Route::post('/documents/{id}', [DemandestageController::class, 'UpdateDocuments']);
+    //Route pour obtenir ma demande de stage confirmé
+    Route::get('/mademande', [DemandestageController::class, 'Mademande']);
 });
 
 
