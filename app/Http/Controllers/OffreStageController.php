@@ -232,7 +232,7 @@ class OffreStageController extends Controller
 
     public function Demandes()
     {
-        $demandestraités = DemandeStage::where('etatdemande', 'Traité')->get();
+        $demandestraités = DemandeStage::where('etatdemande', 'Traitée')->get();
 
         if ($demandestraités) {
             return response()->json([
