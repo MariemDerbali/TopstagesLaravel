@@ -56,7 +56,7 @@ class UserController extends Controller
             'adresse' => 'required',
             'role_id' => 'required',
             'departement' => 'required',
-            'direction' => 'required',
+            'service' => 'required',
             'loginTOPNET' => ['required', 'string', 'unique:users'],
             'email' => ['required', 'string', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'max:25'],
@@ -74,7 +74,7 @@ class UserController extends Controller
 
             $user->role_id = $request->input('role_id');
             $user->departement = $request->input('departement');
-            $user->direction = $request->input('direction');
+            $user->service = $request->input('service');
 
             $user->matricule = $request->input('matricule');
             $user->adresse = $request->input('adresse');
@@ -154,6 +154,7 @@ class UserController extends Controller
             'adresse' => 'required',
             'role_id' => 'required',
             'departement' => 'required',
+            'service' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -168,7 +169,7 @@ class UserController extends Controller
 
                 $user->role_id = $request->input('role_id');
                 $user->departement = $request->input('departement');
-                $user->direction = $request->input('direction');
+                $user->service = $request->input('service');
 
                 $user->matricule = $request->input('matricule');
                 $user->adresse = $request->input('adresse');
@@ -228,25 +229,28 @@ class UserController extends Controller
         ]);
     }
 
+
     public function GetDepartements()
     {
         //Obtenir la liste de tous les départements activés
         $deps =  DB::collection('departments')->where('etat', 'active')->get();
         return response()->json([
             'status' => 200,
-            'deps' => $deps
+            'departements' => $deps
         ]);
     }
 
-    public function GetDirections()
+    public function GetServices()
     {
-        //Obtenir la liste de tous les directions activés
-        $directions =  DB::collection('directions')->where('etat', 'active')->get();
+        //Obtenir la liste de tous les services activés
+        $services =  DB::collection('services')->where('etat', 'active')->get();
         return response()->json([
             'status' => 200,
-            'directions' => $directions
+            'services' => $services
         ]);
     }
+
+
     public function desactiverUser($id)
     {
         $user  = User::find($id);

@@ -30,7 +30,7 @@ class User extends Authenticatable
         'role_id',
         'adresse',
         'departement',
-        'direction',
+        'service',
         'tel',
         'image',
         'etat',

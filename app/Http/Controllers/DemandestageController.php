@@ -10,12 +10,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
 use App\Models\DemandeStage;
 use App\Models\NotificationDocuments;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class DemandestageController extends Controller
 {

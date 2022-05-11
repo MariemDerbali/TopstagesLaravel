@@ -10,8 +10,8 @@ use App\Http\Controllers\CritereController;
 use App\Http\Controllers\ReponseController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ReunionsController;
-use App\Http\Controllers\DirectionController;
-use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\OffreStageController;
 use App\Http\Controllers\DemandestageController;
 use App\Http\Controllers\ProfileTopnetController;
@@ -95,10 +95,9 @@ Route::group(['middleware' => ['auth:sanctum', 'isCoordinateur']], function () {
     Route::get('/roles', [UserController::class, 'GetRoles']);
 
     //Route pour obtenir la liste des départements
-    Route::get('/departements', [UserController::class, 'GetDepartements']);
-
-    //Route pour obtenir la liste des directions
-    Route::get('/user-directions', [UserController::class, 'GetDirections']);
+    Route::get('/user-departements', [UserController::class, 'GetDepartements']);
+    //Route pour obtenir la liste des services
+    Route::get('/services', [UserController::class, 'GetServices']);
 });
 
 
@@ -150,23 +149,24 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
 
 
 
-    /*-------------DIRECTION & DEPARTEMENT-------------*/
+    /*-------------DEPARTEMENT & SERVICES-------------*/
 
-    //Route pour créer une direction
-    Route::post('/directions', [DirectionController::class, 'store']);
-    //Route pour consulter les directions
-    Route::get('/directions', [DirectionController::class, 'index']);
-    //Route pour activer/désactiver direction
-    Route::put('/desactiver-direction/{id}', [DirectionController::class, 'desactiverDirection']);
-    //Route pour modifier une direction
-    Route::post('/direction/{id}', [DirectionController::class, 'update']);
-    Route::get('/edit-direction/{id}', [DirectionController::class, 'edit']);
+    //Route pour créer un département
+    Route::post('/departements', [DepartementController::class, 'store']);
+    //Route pour consulter les département
+    Route::get('/departements', [DepartementController::class, 'index']);
+    //Route pour activer/désactiver un département
+    Route::put('/desactiver-departement/{id}', [DepartementController::class, 'desactiverDepartement']);
+    //Route pour modifier un département
+    Route::post('/departement/{id}', [DepartementController::class, 'update']);
+    Route::get('/edit-departement/{id}', [DepartementController::class, 'edit']);
 
-    Route::get('/departements/{id}', [DirectionController::class, 'GetDepartements']);
-    Route::put('/desactiver-departement/{id}', [DepartmentController::class, 'desactiverDepartement']);
-    Route::post('/departements', [DepartmentController::class, 'store']);
-    Route::post('/departement/{id}', [DepartmentController::class, 'update']);
-    Route::get('/edit-departement/{id}', [DepartmentController::class, 'edit']);
+
+    Route::get('/services/{id}', [DepartementController::class, 'Getservices']);
+    Route::put('/desactiver-service/{id}', [ServiceController::class, 'desactiverService']);
+    Route::post('/services', [ServiceController::class, 'store']);
+    Route::post('/service/{id}', [ServiceController::class, 'update']);
+    Route::get('/edit-service/{id}', [ServiceController::class, 'edit']);
 
     /*-------------Demandes de stage-------------*/
 

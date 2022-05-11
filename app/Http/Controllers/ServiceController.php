@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
 
-class DepartmentController extends Controller
+class ServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -39,12 +38,12 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nomdep' => 'required',
-            'chefdep' => 'required'
+            'nomService'  => ['required', 'string', 'max:255'],
+
         ]);
 
-        $validatordirectionId = Validator::make($request->all(), [
-            'direction' => 'required',
+        $validatordepartementId = Validator::make($request->all(), [
+            'departement' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -52,22 +51,21 @@ class DepartmentController extends Controller
                 'status' => 422,
                 'errors' => $validator->messages(),
             ]);
-        } else if ($validatordirectionId->fails()) {
+        } else if ($validatordepartementId->fails()) {
             return response()->json([
                 'status' => 423,
-                'message' => "Vous devez d'abord créer une direction",
+                'message' => "Vous devez d'abord créer un département",
             ]);
         } else {
-            $Dep = new Department;
-            $Dep->nomdep = $request->input('nomdep');
-            $Dep->chefdep = $request->input('chefdep');
-            $Dep->direction = $request->direction;
-            $Dep->etat = 'active';
-            $Dep->save();
+            $service = new Service;
+            $service->nomService = $request->input('nomService');
+            $service->departement = $request->departement;
+            $service->etat = 'active';
+            $service->save();
             return response()->json([
                 'status' => 200,
-                'message' => 'Département est créé avec succès',
-                'Department' => $Dep,
+                'message' => 'Service est créé avec succès',
+                'Service' => $service,
 
             ]);
         }
@@ -81,7 +79,7 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        return Department::where('_id', $id)->first();
+        return Service::where('_id', $id)->first();
     }
 
     /**
@@ -92,16 +90,16 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        $dep = $this->show($id);
-        if ($dep) {
+        $service = $this->show($id);
+        if ($service) {
             return response()->json([
                 'status' => 200,
-                'dep' => $dep,
+                'service' => $service,
             ]);
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'Aucun département trouvé',
+                'message' => 'Aucun service trouvé',
             ]);
         }
     }
@@ -115,10 +113,8 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //Mettre à jour un département
         $validator = Validator::make($request->all(), [
-            'nomdep' => ['required', 'string', 'max:255'],
-            'chefdep' => ['required', 'string', 'max:255']
+            'nomService' => ['required', 'string', 'max:255'],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -126,22 +122,21 @@ class DepartmentController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-            $dep = Department::find($id);
+            $service = Service::find($id);
 
-            if ($dep) {
+            if ($service) {
 
-                $dep->nomdep = $request->input('nomdep');
-                $dep->chefdep = $request->input('chefdep');
-                $dep->update();
+                $service->nomService = $request->input('nomService');
+                $service->update();
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Département mis à jour avec succès',
+                    'message' => 'Service mis à jour avec succès',
                 ]);
             } else {
                 return response()->json([
                     'status' => 404,
-                    'message' => 'Département non trouvé',
+                    'message' => 'Service non trouvé',
                 ]);
             }
         }
@@ -158,29 +153,29 @@ class DepartmentController extends Controller
         //
     }
 
-    public function desactiverDepartement($id)
+    public function desactiverService($id)
     {
-        $dep  = Department::find($id);
-        if ($dep) {
-            if ($dep->etat == 'active') {
-                $dep->etat = 'inactive';
-                $dep->save();
+        $service  = Service::find($id);
+        if ($service) {
+            if ($service->etat == 'active') {
+                $service->etat = 'inactive';
+                $service->save();
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Département est désactivé'
+                    'message' => 'Service est désactivé'
                 ]);
             } else {
-                $dep->etat = 'active';
-                $dep->save();
+                $service->etat = 'active';
+                $service->save();
                 return response()->json([
                     'status' => 201,
-                    'message' => 'Département est activé'
+                    'message' => 'Service est activé'
                 ]);
             }
         } else {
             return response()->json([
                 'status' => 401,
-                'message' => "Département non trouvé"
+                'message' => "Service non trouvé"
             ]);
         }
     }
