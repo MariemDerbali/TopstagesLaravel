@@ -62,8 +62,8 @@ Route::post('/reset-firstloginpassword/{id}', [AuthController::class, 'resetfirs
 //--------------Routes pour home page----------------------------
 
 //(interface offres de stage publiées)
-//Routes pour obtenir les directions
-Route::get('/homepage-directions', [PublicController::class, 'GetDirections']);
+//Routes pour obtenir les services
+Route::get('/homepage-services', [PublicController::class, 'GetServices']);
 //Route pour obtenir les offres 
 Route::get('/homepage-getoffres', [PublicController::class, 'getOffres']);
 
@@ -137,8 +137,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
 
     //Route pour consulter la liste des critères
     Route::get('/criteres', [CritereController::class, 'index']);
-    //Route pour obtenir les direcions
-    Route::get('/directions', [CritereController::class, 'getDirections']);
+    //Route pour obtenir les services
+    Route::get('/critere-services', [CritereController::class, 'getServices']);
     //Route pour activer/désactiver un critère  
     Route::put('/desactiver-critere/{id}', [CritereController::class, 'desactiverCritere']);
     //Route pour créer un critere
@@ -176,6 +176,7 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::put('/valider-demande/{id}', [CritereController::class, 'validerDemande']);
 
     Route::post('/informer-stagiaire', [NotifDocumentsController::class, 'store']);
+    Route::get('/serviceformation-notif', [NotifDocumentsController::class, 'MessagesDocuments']);
 });
 
 

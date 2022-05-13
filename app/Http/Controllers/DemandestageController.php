@@ -181,27 +181,37 @@ class DemandestageController extends Controller
         if ($post) {
 
 
-            if ($request->hasFile('ficherep') && $request->hasFile('cv')) {
-                $pathFiche = $post->ficherep;
+            if ($request->hasFile('demandestage') && $request->hasFile('cv') && $request->hasFile('cin')) {
+                $pathFiche = $post->demandestage;
                 $pathCV = $post->cv;
+                $pathCIN = $post->cin;
 
-                if (File::exists($pathFiche) || File::exists($pathCV)) {
+                if (File::exists($pathFiche) || File::exists($pathCV) || File::exists($pathCIN)) {
 
                     File::delete($pathFiche);
                     File::delete($pathCV);
+                    File::delete($pathCIN);
                 }
-                $fileFiche = $request->file('ficherep');
+                $fileFiche = $request->file('demandestage');
                 $fileCV = $request->file('cv');
+                $fileCIN = $request->file('cin');
                 $extensionFiche = $fileFiche->getClientOriginalExtension();
                 $extensionCV = $fileCV->getClientOriginalExtension();
+                $extensionCIN = $fileCIN->getClientOriginalExtension();
 
                 $filenameFiche = Str::random(5) . '.' . $extensionFiche;
                 $filenameCV = Str::random(5) . '.' . $extensionCV;
+                $filenameCIN = Str::random(5) . '.' . $extensionCIN;
+
                 $fileFiche->move('img/post/', $filenameFiche);
                 $fileCV->move('img/post/', $filenameCV);
+                $fileCIN->move('img/post/', $filenameCIN);
 
-                $post->ficherep = 'img/post/' . $filenameFiche;
+
+                $post->demandestage = 'img/post/' . $filenameFiche;
                 $post->cv = 'img/post/' . $filenameCV;
+                $post->cin = 'img/post/' . $filenameCIN;
+
                 $post->date = Carbon::now()->toDateTimeString();
             }
 
@@ -290,20 +300,20 @@ class DemandestageController extends Controller
         if ($post) {
 
 
-            if ($request->hasFile('ficherep')) {
-                $pathFiche = $post->ficherep;
+            if ($request->hasFile('demandestage')) {
+                $pathFiche = $post->demandestage;
 
                 if (File::exists($pathFiche)) {
 
                     File::delete($pathFiche);
                 }
-                $fileFiche = $request->file('ficherep');
+                $fileFiche = $request->file('demandestage');
                 $extensionFiche = $fileFiche->getClientOriginalExtension();
 
                 $filenameFiche = Str::random(5) . '.' . $extensionFiche;
                 $fileFiche->move('img/post/', $filenameFiche);
 
-                $post->ficherep = 'img/post/' . $filenameFiche;
+                $post->demandestage = 'img/post/' . $filenameFiche;
                 $post->date = Carbon::now()->toDateTimeString();
             }
 
@@ -324,6 +334,23 @@ class DemandestageController extends Controller
                 $post->date = Carbon::now()->toDateTimeString();
             }
 
+            if ($request->hasFile('cin')) {
+                $pathCIN = $post->cin;
+
+                if (File::exists($pathCIN)) {
+
+                    File::delete($pathCIN);
+                }
+                $fileCIN = $request->file('cin');
+                $extensionCIN = $fileCIN->getClientOriginalExtension();
+
+                $filenameCIN = Str::random(5) . '.' . $extensionCIN;
+                $fileCIN->move('img/post/', $filenameCIN);
+
+                $post->cin = 'img/post/' . $filenameCIN;
+                $post->date = Carbon::now()->toDateTimeString();
+            }
+
 
 
             $id = auth()->user()->_id;
@@ -335,6 +362,18 @@ class DemandestageController extends Controller
             if ($notif) {
                 $notif->delete();
             }
+
+            $emetteur = auth()->user()->nom . ' ' . auth()->user()->prenom;
+            $emetteurID = auth()->user()->_id;
+            $emetteurImage = auth()->user()->image;
+            $newnotif = new NotificationDocuments;
+            $newnotif->emetteurID = $emetteurID;
+            $newnotif->emetteur = $emetteur;
+            $newnotif->emetteurImage = $emetteurImage;
+            $newnotif->date = Carbon::now()->toDateTimeString();
+
+
+            $newnotif->save();
 
             $post->update();
 

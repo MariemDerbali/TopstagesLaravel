@@ -16,6 +16,10 @@ class CreateNotificationDocumentsTable extends Migration
         Schema::create('notification_documents', function (Blueprint $table) {
             $table->id();
             $table->string('message');
+            $table->string('emetteur');
+            $table->string('emetteurID');
+            $table->string('emetteurRole');
+            $table->string('emetteurImage');
             $table->string('Stagiaire_id');
             $table->timestamps();
         });

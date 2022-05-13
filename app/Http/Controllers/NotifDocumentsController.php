@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\NotificationDocuments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class NotifDocumentsController extends Controller
 {
@@ -49,9 +50,13 @@ class NotifDocumentsController extends Controller
                 'errors' => $validator->messages(),
             ]);
         } else {
-
+            $emetteurRole = auth()->user()->role_id;
+            $emetteurImage = auth()->user()->image;
             $notif = new NotificationDocuments;
             $notif->message = $request->input('message');
+            $notif->emetteurRole = $emetteurRole;
+            $notif->emetteurImage = $emetteurImage;
+            $notif->date = Carbon::now()->toDateTimeString();
             $notif->Stagiaire_id = $request->Stagiaire_id;
 
 
@@ -66,6 +71,7 @@ class NotifDocumentsController extends Controller
             ]);
         }
     }
+
 
 
     /**
@@ -111,5 +117,24 @@ class NotifDocumentsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function MessagesDocuments()
+    {
+
+        $notif = NotificationDocuments::whereNotNull('emetteur')->latest()->first();
+
+        if ($notif) {
+            return response()->json([
+                'status' => 200,
+                'notif' => $notif,
+
+            ]);
+        } else {
+            return response()->json([
+                'status' => 401,
+
+            ]);
+        }
     }
 }

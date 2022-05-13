@@ -70,6 +70,7 @@ class OffreStageController extends Controller
             $offre->domaine = $request->input('domaine');
 
             $offre->description = $request->input('description');
+            $offre->encadrant = auth()->user()->nom . ' ' . auth()->user()->prenom;
             $offre->etatoffre = 'active';
             $offre->etatpartage = 'unpublished';
             $offre->save();

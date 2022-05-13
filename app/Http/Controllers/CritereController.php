@@ -6,6 +6,7 @@ use App\Models\Critere;
 use App\Models\DemandeStage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\NotificationDocuments;
 use Illuminate\Support\Facades\Validator;
 
 class CritereController extends Controller
@@ -142,16 +143,21 @@ class CritereController extends Controller
 
             if ($critere) {
 
-                $critere->typestage = $request->input('typestage');
-                $critere->domainestage = $request->input('domainestage');
-                $critere->nombrequestionsfaciles = $request->input('nombrequestionsfaciles');
-                $critere->nombrequestionsmoyennes = $request->input('nombrequestionsmoyennes');
-                $critere->nombrequestionsdifficiles = $request->input('nombrequestionsdifficiles');
-                $critere->notequestionfacile = $request->input('notequestionfacile');
-                $critere->notequestionmoyenne = $request->input('notequestionmoyenne');
-                $critere->notequestiondifficile = $request->input('notequestiondifficile');
-
+                $critere->etat = 'inactive';
                 $critere->update();
+
+                $newcritere = new Critere;
+                $newcritere->typestage = $request->input('typestage');
+                $newcritere->domainestage = $request->input('domainestage');
+                $newcritere->nombrequestionsfaciles = $request->input('nombrequestionsfaciles');
+                $newcritere->nombrequestionsmoyennes = $request->input('nombrequestionsmoyennes');
+                $newcritere->nombrequestionsdifficiles = $request->input('nombrequestionsdifficiles');
+                $newcritere->notequestionfacile = $request->input('notequestionfacile');
+                $newcritere->notequestionmoyenne = $request->input('notequestionmoyenne');
+                $newcritere->notequestiondifficile = $request->input('notequestiondifficile');
+                $newcritere->etat = 'active';
+
+                $newcritere->save();
 
                 return response()->json([
                     'status' => 200,
@@ -178,12 +184,12 @@ class CritereController extends Controller
     }
 
 
-    public function getDirections()
+    public function getServices()
     {
-        $deps =  DB::collection('departments')->where('etat', 'active')->get();
+        $services =  DB::collection('services')->where('etat', 'active')->get();
         return response()->json([
             'status' => 200,
-            'deps' => $deps
+            'services' => $services
         ]);
     }
     public function desactiverCritere($id)
@@ -228,9 +234,15 @@ class CritereController extends Controller
     public function ValiderDemande($id)
     {
         $demande = DemandeStage::find($id);
+        $StagiaireID = $demande->stagiaire[0]['stagiaireId'];
+
+        $notif = NotificationDocuments::where('emetteurID', $StagiaireID)->latest()->first();
+
         if ($demande) {
             if ($demande->etatdemande == 'Nouvellement créé') {
                 $demande->etatdemande = 'En cours de traitement';
+                $notif->delete();
+
                 $demande->save();
 
                 return response()->json([

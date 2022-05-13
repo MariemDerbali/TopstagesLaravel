@@ -21,6 +21,7 @@ class CreateOffreStagesTable extends Migration
             $table->string('description');
             $table->string('technologies');
             $table->string('periode');
+            $table->string('encadrant');
             $table->string('etatoffre');
             $table->string('etatpartage');
             $table->string('');

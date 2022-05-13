@@ -17,8 +17,9 @@ class CreateDemandeStagesTable extends Migration
             $table->id();
             $table->string('domaine');
             $table->string('type');
-            $table->string('ficherep');
+            $table->string('demandestage');
             $table->string('cv');
+            $table->string('cin');
             $table->date('date');
             $table->string('stagiaire');
             $table->string('etatpost');
