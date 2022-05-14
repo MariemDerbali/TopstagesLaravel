@@ -264,7 +264,7 @@ class AuthController extends Controller
                 if ($status == Password::RESET_LINK_SENT) {
                     return response()->json([
                         'status' => 200,
-                        'message' => 'E-mail envoyé avec succès'
+                        'message' => 'Lien de récupération de mot de passe envoyé avec succès'
                     ]);
                 } else {
                     //si l'e-mail n'a pas été envoyé , une réponse d'erreur sera renvoyée
