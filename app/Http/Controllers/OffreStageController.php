@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\OffreStage;
-use App\Models\DemandeStage;
 
+use App\Models\DemandeStage;
+use App\Models\statistiqueOffres;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -19,12 +21,15 @@ class OffreStageController extends Controller
     public function index()
     {
         //obtenir la liste des offres de stage pour l'encadrant et chef département
-        $madirection = auth()->user()->direction;
+        $monservice = auth()->user()->service;
 
-        $offres = DB::collection('offre_stages')->where('domaine', $madirection)->get();
+
+        $offres = DB::collection('offre_stages')->where('domaine', $monservice)->get();
         return response()->json([
             'status' => 200,
             'offres' => $offres,
+
+
         ]);
     }
 
@@ -73,7 +78,12 @@ class OffreStageController extends Controller
             $offre->encadrant = auth()->user()->nom . ' ' . auth()->user()->prenom;
             $offre->etatoffre = 'active';
             $offre->etatpartage = 'unpublished';
+
+
+
             $offre->save();
+
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Offre créée avec succès',
@@ -210,6 +220,26 @@ class OffreStageController extends Controller
         if ($offre) {
             if ($offre->etatpartage == 'unpublished') {
                 $offre->etatpartage = 'published';
+
+
+
+                //save year to stat record if its a new year
+                $currentYear = Carbon::now()->format('Y');
+                $stat = statistiqueOffres::where(['annee' => $currentYear])->exists();
+
+                if (!$stat) {
+                    $statOffre = new statistiqueOffres;
+                    $statOffre->annee =  $currentYear;
+                    $statOffre->offres = 1;
+                    $statOffre->save();
+                }
+                if ($stat) {
+
+                    $statOffre = statistiqueOffres::where(['annee' => $currentYear])->first();
+                    $statOffre->offres += 1;
+                    $statOffre->save();
+                }
+
                 $offre->save();
                 return response()->json([
                     'status' => 200,
@@ -273,5 +303,16 @@ class OffreStageController extends Controller
                 'message' => "Demande non trouvé"
             ]);
         }
+    }
+
+    public function statistiquesOffres()
+    {
+        $statOffres = statistiqueOffres::all();
+        return response()->json([
+            'status' => 200,
+            'statOffres' => $statOffres,
+
+
+        ]);
     }
 }

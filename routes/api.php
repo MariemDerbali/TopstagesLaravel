@@ -251,6 +251,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Route pour se déconnecter pour tous les utilisateurs
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    //--------------------------Route pour le service formation et chef département-----------------------------------
+
+    Route::get('/stat-offres', [OffreStageController::class, 'statistiquesOffres']);
+
+
     //--------------------------Routes pour l'encadrant et chef département-----------------------------------
 
     //Route pour créer une offre

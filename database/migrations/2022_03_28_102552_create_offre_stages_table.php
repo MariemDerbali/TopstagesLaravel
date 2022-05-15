@@ -24,7 +24,7 @@ class CreateOffreStagesTable extends Migration
             $table->string('encadrant');
             $table->string('etatoffre');
             $table->string('etatpartage');
-            $table->string('');
+            $table->string('annee');
             $table->timestamps();
         });
     }
