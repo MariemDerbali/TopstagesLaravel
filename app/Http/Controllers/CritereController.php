@@ -46,8 +46,7 @@ class CritereController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'typestage' => 'required',
-            'domainestage' => 'required',
+            'typestage' =>  ['required', 'unique:criteres'],
             'nombrequestionsfaciles' => 'required',
             'nombrequestionsmoyennes' => 'required',
             'nombrequestionsdifficiles' => 'required',
@@ -55,15 +54,16 @@ class CritereController extends Controller
             'notequestionmoyenne' => 'required',
             'notequestiondifficile' => 'required',
         ]);
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 422,
                 'errors' => $validator->messages(),
             ]);
         } else {
+
             $critere = new Critere;
             $critere->typestage = $request->input('typestage');
-            $critere->domainestage = $request->input('domainestage');
             $critere->nombrequestionsfaciles = $request->input('nombrequestionsfaciles');
             $critere->nombrequestionsmoyennes = $request->input('nombrequestionsmoyennes');
             $critere->nombrequestionsdifficiles = $request->input('nombrequestionsdifficiles');
@@ -125,7 +125,6 @@ class CritereController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'typestage' => 'required',
-            'domainestage' => 'required',
             'nombrequestionsfaciles' => 'required',
             'nombrequestionsmoyennes' => 'required',
             'nombrequestionsdifficiles' => 'required',
@@ -148,7 +147,6 @@ class CritereController extends Controller
 
                 $newcritere = new Critere;
                 $newcritere->typestage = $request->input('typestage');
-                $newcritere->domainestage = $request->input('domainestage');
                 $newcritere->nombrequestionsfaciles = $request->input('nombrequestionsfaciles');
                 $newcritere->nombrequestionsmoyennes = $request->input('nombrequestionsmoyennes');
                 $newcritere->nombrequestionsdifficiles = $request->input('nombrequestionsdifficiles');
@@ -241,7 +239,9 @@ class CritereController extends Controller
         if ($demande) {
             if ($demande->etatdemande == 'Nouvellement créé') {
                 $demande->etatdemande = 'En cours de traitement';
-                $notif->delete();
+                if ($notif) {
+                    $notif->delete();
+                }
 
                 $demande->save();
 

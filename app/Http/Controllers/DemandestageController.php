@@ -24,13 +24,12 @@ class DemandestageController extends Controller
      */
     public function indexQuestionsReponses(Request $request)
     {
-        //le domaine et le type de stage sélectionné par le stagiaire
+        // le type de stage sélectionné par le stagiaire
         $postID = DemandeStage::get()->last()->_id;
-        $domaine = DemandeStage::get()->last()->domaine;
         $type = DemandeStage::get()->last()->type;
 
-        //obtenir le critère correspondant au domaine et au type de stage
-        $critere = Critere::where('typestage', $type)->where('domainestage', $domaine)->where('etat', 'active')->first();
+        //obtenir le critère correspondant au type de stage
+        $critere = Critere::where('typestage', $type)->where('etat', 'active')->first();
 
         //s'il est trouvé
         if ($critere) {

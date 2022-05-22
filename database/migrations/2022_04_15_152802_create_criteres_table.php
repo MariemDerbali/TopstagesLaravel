@@ -15,7 +15,6 @@ class CreateCriteresTable extends Migration
     {
         Schema::create('criteres', function (Blueprint $table) {
             $table->id();
-            $table->string('domainestage'); //domaine de stage
             $table->string('typestage'); //type de stage
             $table->string('nombrequestionsfaciles'); //nombre de questions faciles
             $table->string('nombrequestionsmoyennes'); //nombre de questions moyennes
