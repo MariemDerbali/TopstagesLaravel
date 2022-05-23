@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\DemandeStage;
 use App\Models\NotificationDocuments;
+use App\Models\OffreStage;
 use Illuminate\Support\Facades\File;
 
 

@@ -20,17 +20,32 @@ class OffreStageController extends Controller
      */
     public function index()
     {
-        //obtenir la liste des offres de stage pour l'encadrant et chef département
-        $monservice = auth()->user()->service;
+        //obtenir la liste des offres de stage pour l'encadrant
+        if (auth()->user()->role_id == 'Encadrant') {
+            $EncadrantID = auth()->user()->_id;
 
 
-        $offres = DB::collection('offre_stages')->where('domaine', $monservice)->get();
-        return response()->json([
-            'status' => 200,
-            'offres' => $offres,
+            $offres = DB::collection('offre_stages')->where('encadrant.encadrantId', $EncadrantID)->get();
+            return response()->json([
+                'status' => 200,
+                'offres' => $offres,
 
 
-        ]);
+            ]);
+        }
+        //obtenir la liste des offres de stage pour le chef département
+        else {
+            $monservice = auth()->user()->service;
+
+
+            $offres = DB::collection('offre_stages')->where('domaine', $monservice)->get();
+            return response()->json([
+                'status' => 200,
+                'offres' => $offres,
+
+
+            ]);
+        }
     }
 
     /**
@@ -75,7 +90,15 @@ class OffreStageController extends Controller
             $offre->domaine = $request->input('domaine');
 
             $offre->description = $request->input('description');
-            $offre->encadrant = auth()->user()->nom . ' ' . auth()->user()->prenom;
+
+            $encadrantarray[] = [
+                'encadrantId' => auth()->user()->_id,
+                'nom' => auth()->user()->nom,
+                'prenom' => auth()->user()->prenom,
+                'email' => auth()->user()->email,
+                'tel' => auth()->user()->tel,
+            ];
+            $offre->encadrant = $encadrantarray;
             $offre->etatoffre = 'active';
             $offre->etatpartage = 'unpublished';
 
@@ -263,7 +286,9 @@ class OffreStageController extends Controller
 
     public function Demandes()
     {
-        $demandestraités = DemandeStage::where('etatdemande', 'Traitée')->get();
+        $encadrant = auth()->user()->nom . ' ' . auth()->user()->prenom;
+
+        $demandestraités = DemandeStage::where('etatdemande', 'Traitée')->where('encadrant', $encadrant)->get();
 
         if ($demandestraités) {
             return response()->json([

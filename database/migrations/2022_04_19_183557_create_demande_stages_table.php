@@ -22,6 +22,8 @@ class CreateDemandeStagesTable extends Migration
             $table->string('cin');
             $table->date('date');
             $table->string('stagiaire');
+            $table->string('sujet');
+            $table->string('encadrant');
             $table->string('etatpost');
             $table->string('etatdemande');
             $table->string('etatprise');

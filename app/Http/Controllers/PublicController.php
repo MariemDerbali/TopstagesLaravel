@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OffreStage;
+use Carbon\Carbon;
 use App\Models\Stagiaire;
+use App\Models\OffreStage;
 use App\Models\DemandeStage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,8 @@ class PublicController extends Controller
         $validator = Validator::make($request->all(), [
             'type' => 'required',
             'domaine' => 'required',
+            'sujet' => 'required',
+            'encadrant' => 'required',
             'stagiaireID' => 'required',
         ]);
         if ($validator->fails()) {
@@ -49,9 +52,18 @@ class PublicController extends Controller
                 'message' => 'Veuillez choisir le domaine et le type de stage'
             ]);
         } else {
+            /*  $check = $this->checkDemandeTimeInterval($request->stagiaireID);
+            if ($check) {
+                return response()->json([
+                    'status' => 401,
+                    'message' => 'Vous avez déjà fait une demande de stage. Merci de patienter pour faire une prochaine demande'
+                ]);
+            } else {*/
             $offredemande = new DemandeStage;
             $offredemande->domaine = $request->input('domaine');
             $offredemande->type = $request->input('type');
+            $offredemande->sujet = $request->sujet;
+            $offredemande->encadrant = $request->encadrant;
 
             $idstagiaire = $request->stagiaireID;
             $stagiaire = Stagiaire::find($idstagiaire);
@@ -73,6 +85,14 @@ class PublicController extends Controller
                 'status' => 200,
                 'offredemande' => $offredemande
             ]);
+            //}
         }
+    }
+
+    public function checkDemandeTimeInterval($id)
+    {
+
+        return DB::collection('demande_stages')
+            ->where('stagiaire.stagiaireId', $id)->where('created_at', now())->exists();
     }
 }
