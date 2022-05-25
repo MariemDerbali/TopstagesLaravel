@@ -147,7 +147,6 @@ class CritereController extends Controller
             $critere = Critere::find($id);
 
             if ($critere) {
-
                 $critere->etat = 'inactive';
                 $critere->update();
 
