@@ -53,6 +53,8 @@ class CritereController extends Controller
             'notequestionfacile' => 'required',
             'notequestionmoyenne' => 'required',
             'notequestiondifficile' => 'required',
+            'pourcentage' => 'required',
+
         ]);
 
         if ($validator->fails()) {
@@ -70,6 +72,8 @@ class CritereController extends Controller
             $critere->notequestionfacile = $request->input('notequestionfacile');
             $critere->notequestionmoyenne = $request->input('notequestionmoyenne');
             $critere->notequestiondifficile = $request->input('notequestiondifficile');
+            $critere->pourcentage = $request->input('pourcentage');
+
             $critere->etat = 'active';
 
             $critere->save();
@@ -131,6 +135,8 @@ class CritereController extends Controller
             'notequestionfacile' => 'required',
             'notequestionmoyenne' => 'required',
             'notequestiondifficile' => 'required',
+            'pourcentage' => 'required',
+
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -153,6 +159,8 @@ class CritereController extends Controller
                 $newcritere->notequestionfacile = $request->input('notequestionfacile');
                 $newcritere->notequestionmoyenne = $request->input('notequestionmoyenne');
                 $newcritere->notequestiondifficile = $request->input('notequestiondifficile');
+                $newcritere->pourcentage = $request->input('pourcentage');
+
                 $newcritere->etat = 'active';
 
                 $newcritere->save();

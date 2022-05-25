@@ -22,6 +22,7 @@ class CreateCriteresTable extends Migration
             $table->string('notequestionfacile'); //note pour chaque question facile
             $table->string('notequestionmoyenne'); //note pour chaque questio moyenne
             $table->string('notequestiondifficile'); //note pour chaque question difficile
+            $table->string('pourcentage'); //Pourcentage de réussite
             $table->string('etat');
             $table->timestamps();
         });

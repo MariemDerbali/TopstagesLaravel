@@ -47,7 +47,7 @@ class DemandestageController extends Controller
             $notequestiondifficile = $critere->notequestiondifficile * $nbrquestionsdifficiles;
 
             $notetotale = $notequestionfacile + $notequestionmoyenne + $notequestiondifficile; //note test
-
+            $pourcentage = $critere->pourcentage;
 
             $randomQuestionsFacile = Question::where('niveau', 'Facile')->get()->random($nbrquestionsfaciles);
 
@@ -100,6 +100,7 @@ class DemandestageController extends Controller
                     'questionsreponses' => $RandomQuestions,
                     'duree' => $duree,
                     'notetotale' => $notetotale,
+                    'pourcentage' => $pourcentage,
                     'stagiaire' => $stagiaire,
                     'postid' => $postID,
 
