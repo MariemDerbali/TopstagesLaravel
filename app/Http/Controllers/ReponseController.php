@@ -73,7 +73,9 @@ class ReponseController extends Controller
             } else {
                 //sinon créer la réponse
                 $reponse = new Reponse;
-                $reponse->reponseText = $request->input('reponseText');
+                if ($request->has('reponseText')) {
+                    $reponse->reponseText = $request->input('reponseText');
+                }
                 $reponse->reponseCorrecte = $request->input('reponseCorrecte');
                 $reponse->questionID = $request->questionID;
 
@@ -144,8 +146,7 @@ class ReponseController extends Controller
     {
         //Modifier la réponse
         $validator = Validator::make($request->all(), [
-            'reponseText',
-            'reponseImage',
+
             'reponseCorrecte' => 'required',
 
         ]);
@@ -159,7 +160,7 @@ class ReponseController extends Controller
 
             if ($reponse) {
 
-                $reponse->reponseText = $request->input('reponseText');
+
                 $reponse->reponseCorrecte = $request->input('reponseCorrecte');
 
                 if ($request->hasFile('reponseImage')) {

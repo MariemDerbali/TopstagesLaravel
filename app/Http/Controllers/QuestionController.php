@@ -73,7 +73,9 @@ class QuestionController extends Controller
             } else {
                 //Sinon créer la question
                 $question = new Question;
-                $question->questionText = $request->input('questionText');
+                if ($request->has('questionText')) {
+                    $question->questionText = $request->input('questionText');
+                }
                 $question->duree = $request->input('duree');
                 $question->niveau = $request->input('niveau');
 
@@ -145,8 +147,7 @@ class QuestionController extends Controller
     public function update(Request $request, $id)
     { //Modifier la question
         $validator = Validator::make($request->all(), [
-            'questionText',
-            'questionImage',
+
             'duree' => 'required',
             'niveau' => 'required',
         ]);
@@ -160,7 +161,7 @@ class QuestionController extends Controller
 
             if ($question) {
 
-                $question->questionText = $request->input('questionText');
+
                 $question->duree = $request->input('duree');
                 $question->niveau = $request->input('niveau');
 

@@ -41,8 +41,6 @@ class PublicController extends Controller
         $validator = Validator::make($request->all(), [
             'type' => 'required',
             'domaine' => 'required',
-            'sujet' => 'required',
-            'encadrant' => 'required',
             'stagiaireID' => 'required',
         ]);
         if ($validator->fails()) {
@@ -60,10 +58,13 @@ class PublicController extends Controller
                 ]);
             } else {*/
             $offredemande = new DemandeStage;
+            if ($request->has('sujet') && $request->has('encadrant')) {
+                $offredemande->sujet = $request->sujet;
+                $offredemande->encadrant = $request->encadrant;
+            }
             $offredemande->domaine = $request->input('domaine');
             $offredemande->type = $request->input('type');
-            $offredemande->sujet = $request->sujet;
-            $offredemande->encadrant = $request->encadrant;
+
 
             $idstagiaire = $request->stagiaireID;
             $stagiaire = Stagiaire::find($idstagiaire);
