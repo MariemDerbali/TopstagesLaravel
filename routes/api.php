@@ -176,7 +176,6 @@ Route::group(['middleware' => ['auth:sanctum', 'isServiceFormation']], function 
     Route::put('/valider-demande/{id}', [CritereController::class, 'validerDemande']);
 
     Route::post('/informer-stagiaire', [NotifDocumentsController::class, 'store']);
-    Route::get('/serviceformation-notif', [NotifDocumentsController::class, 'MessagesDocuments']);
 });
 
 
@@ -201,6 +200,7 @@ Route::group(['middleware' => ['auth:sanctum', 'isChefDepartement']], function (
     });
 
     Route::get('/encadrants', [ChefDepartementController::class, 'getEncadrants']);
+    Route::get('/stat-offres', [ChefDepartementController::class, 'statistiquesOffres']);
 });
 
 
@@ -251,9 +251,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Route pour se déconnecter pour tous les utilisateurs
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    //--------------------------Route pour le service formation et chef département-----------------------------------
 
-    Route::get('/stat-offres', [OffreStageController::class, 'statistiquesOffres']);
+
+    //--------------------------Route pour le service formation-----------------------------------
+    Route::get('/stat-stagiaires', [OffreStageController::class, 'statistiquesStagiaires']);
+    Route::get('/serviceformation-notif', [NotifDocumentsController::class, 'MessagesDocuments']);
 
 
     //--------------------------Routes pour l'encadrant et chef département-----------------------------------

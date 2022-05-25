@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Models\statistiqueOffres;
+use Illuminate\Support\Facades\DB;
 
 class ChefDepartementController extends Controller
 {
@@ -30,6 +31,16 @@ class ChefDepartementController extends Controller
         return response()->json([
             'status' => 200,
             'encadrants' => $encadrants
+        ]);
+    }
+    public function statistiquesOffres()
+    {
+        $statOffres = statistiqueOffres::all();
+        return response()->json([
+            'status' => 200,
+            'statOffres' => $statOffres,
+
+
         ]);
     }
 }

@@ -24,10 +24,10 @@ class isEncadrant
                 return $next($request);
             } else {
                 return response()->json([
-                    'status' => 403,
+
                     'message' => "Accès refusé..Vous n'êtes pas un encadrant.",
 
-                ]);
+                ], 403);
             }
         } else {
             return response()->json([

@@ -6,9 +6,10 @@ use Carbon\Carbon;
 use App\Models\OffreStage;
 
 use App\Models\DemandeStage;
-use App\Models\statistiqueOffres;
 use Illuminate\Http\Request;
+use App\Models\statistiqueOffres;
 use Illuminate\Support\Facades\DB;
+use App\Models\statistiqueStagiaire;
 use Illuminate\Support\Facades\Validator;
 
 class OffreStageController extends Controller
@@ -309,6 +310,31 @@ class OffreStageController extends Controller
         if ($demande) {
             if ($demande->etatprise !== 'vrai') {
                 $demande->etatprise = 'vrai';
+
+
+
+
+
+                //save year to stat record if its a new year
+                $currentYear = Carbon::now()->format('Y');
+                $stat = statistiqueStagiaire::where(['annee' => $currentYear])->exists();
+
+                if (!$stat) {
+                    $statStagiaire = new statistiqueStagiaire;
+                    $statStagiaire->annee =  $currentYear;
+                    $statStagiaire->stagiaires = 1;
+                    $statStagiaire->save();
+                }
+                if ($stat) {
+
+                    $statStagiaire = statistiqueStagiaire::where(['annee' => $currentYear])->first();
+                    $statStagiaire->stagiaires += 1;
+                    $statStagiaire->save();
+                }
+
+
+
+
                 $demande->save();
                 return response()->json([
                     'status' => 200,
@@ -330,12 +356,14 @@ class OffreStageController extends Controller
         }
     }
 
-    public function statistiquesOffres()
+
+
+    public function statistiquesStagiaires()
     {
-        $statOffres = statistiqueOffres::all();
+        $statStagiaires = statistiqueStagiaire::all();
         return response()->json([
             'status' => 200,
-            'statOffres' => $statOffres,
+            'statStagiaires' => $statStagiaires,
 
 
         ]);

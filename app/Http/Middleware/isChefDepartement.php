@@ -24,10 +24,10 @@ class isChefDepartement
                 return $next($request);
             } else {
                 return response()->json([
-                    'status' => 403,
+
                     'message' => "Accès refusé..Vous n'êtes pas un chef département.",
 
-                ]);
+                ], 403);
             }
         } else {
             return response()->json([

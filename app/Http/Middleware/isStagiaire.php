@@ -23,10 +23,9 @@ class isStagiaire
                 return $next($request);
             } else {
                 return response()->json([
-                    'status' => 405,
                     'message' => "Accès refusé..Vous n'êtes pas un stagiaire.",
 
-                ]);
+                ], 403);
             }
         } else {
             return response()->json([
