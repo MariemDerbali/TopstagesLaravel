@@ -17,7 +17,7 @@ class CreateNotificationDocumentsTable extends Migration
             $table->id();
             $table->string('message');
             $table->string('emetteur');
-            $table->string('emetteurID');
+            // $table->string('emetteurID');
             $table->string('emetteurRole');
             $table->string('emetteurImage');
             $table->string('Stagiaire_id');
