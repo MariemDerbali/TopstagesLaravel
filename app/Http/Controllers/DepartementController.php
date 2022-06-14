@@ -47,7 +47,7 @@ class DepartementController extends Controller
 
         $validator = Validator::make($request->all(), [
 
-            'nomdep' => ['required', 'string', 'max:255'],
+            'nomdep' => ['required', 'string', 'max:255', 'unique:departments'],
             'chefdep' => ['required', 'string', 'max:255']
         ]);
 
