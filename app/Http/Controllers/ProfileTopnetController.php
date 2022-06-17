@@ -40,8 +40,8 @@ class ProfileTopnetController extends Controller
     public function updateProfil(Request $request, $id)
     { //Mettre à jour le profil de l'utilisateur pour tous les utilisateur sauf le stagiaire
         $validator = Validator::make($request->all(), [
-            'nom' => ['required', 'string', 'max:255'],
-            'prenom' => ['required', 'string', 'max:255'],
+            'nom' => 'required|alpha',
+            'prenom' => 'required|alpha',
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
             'adresse' => 'required',
             'role_id' => 'required',

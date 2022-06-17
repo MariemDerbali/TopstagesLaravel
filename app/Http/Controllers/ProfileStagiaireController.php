@@ -85,8 +85,8 @@ class ProfileStagiaireController extends Controller
     public function update(Request $request, $id)
     { //Mettre à jour le profil de stagiaire
         $validator = Validator::make($request->all(), [
-            'nom' => ['required', 'string', 'max:255'],
-            'prenom' => ['required', 'string', 'max:255'],
+            'nom' => 'required|alpha',
+            'prenom' => 'required|alpha',
             'tel' => ['required', 'regex:/^[2459]\d{7}$/'],
             'adresse' => 'required',
             'role_id' => 'required',

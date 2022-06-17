@@ -27,7 +27,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'nom' => 'required|alpha',
             'prenom' => 'required|alpha',
-            'cinpasseport' => ['required', 'string', 'min:7', 'max:8', 'unique:users'],
+            'cinpasseport' => ['required', 'string', 'min:7', 'max:8', 'unique:stagiaires'],
             'email' => ['required', 'string', 'email', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'max:25', 'confirmed'],
 
@@ -283,7 +283,7 @@ class AuthController extends Controller
         //validation des requêtes
         $validator = Validator::make($request->all(), [
             'token' => 'required',
-            'password' => ['required', 'string', 'confirmed', 'min:6', RulesPassword::defaults()],
+            'password' => ['required', 'string', 'confirmed', RulesPassword::defaults()],
         ]);
 
         //Si la validation échoue, une réponse d'erreur sera renvoyée
